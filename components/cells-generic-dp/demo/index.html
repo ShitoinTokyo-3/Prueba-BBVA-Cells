@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  <title>cells-generic-dp Demo</title>
+
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+  <script>
+    window.I18nMsg = window.I18nMsg || {};
+    window.I18nMsg.disabled = true;
+  </script>
+
+  <link rel="import" href="../../cells-demo-helper/cells-demo-helper.html">
+  <link rel="lazy-import" href="../../polymer/lib/elements/dom-bind.html">
+  <link rel="lazy-import" href="../../coronita-icons/coronita-icons.html">
+  <link rel="lazy-import" href="../../cells-st-button/cells-st-button.html">
+  <link rel="lazy-import" href="../../cells-select/cells-select.html">
+  <link rel="lazy-import" href="../cells-generic-dp.html">
+  <link rel="lazy-import" href="css/demo-styles.html">
+</head>
+
+<body unresolved ontouchstart style="margin: 0;">
+  <cells-demo-helper multi-toast resolution="tablet" events='["request-success", "request-error", "cells-generic-dp-info", "cells-generic-dp-error"]'>
+    <cells-demo-case heading="Default">
+      <template>
+        <dom-bind>
+          <template>
+            <div class="demo-header">
+              <div class="demo-actions">
+                <cells-st-button>
+                  <button id="default-start">Success</button>
+                </cells-st-button>
+                <cells-st-button>
+                  <button id="error-start">Error</button>
+                </cells-st-button>
+              </div>
+              <div class="demo-result">
+                <pre id="default-response"><code class="language-json"></code></pre>
+              </div>
+            </div>
+            <!--This instance will fire a success-->
+            <cells-generic-dp id="default" host="https://swapi.co/api/films"></cells-generic-dp>
+            <!--This instance will fire an error, because there's no active session-->
+            <cells-generic-dp id="error" host="https://artichoke.platform.bbva.com" path="accounts/v0/accounts"></cells-generic-dp>
+          </template>
+        </dom-bind>
+        <script src="js/demo-script.js"></script>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="With verbose" description="If [verbose] is true, debug logs will appear on console">
+      <template>
+        <dom-bind>
+          <template>
+            <section class="demo-snippet">
+              <div class="demo-header">
+                <div class="demo-actions">
+                  <cells-st-button>
+                    <button id="verbose-start">Run</button>
+                  </cells-st-button>
+                </div>
+                <div class="demo-result">
+                  <pre id="verbose-response"><code class="language-json"></code></pre>
+                </div>
+              </div>
+              <cells-generic-dp id="verbose" host="https://swapi.co" path="api/species/" verbose="true"></cells-generic-dp>
+            </section>
+          </template>
+        </dom-bind>
+        <script src="./js/demo-script.js"></script>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="Custom path" description="If [path] is defined, will be concatenated to [host] value">
+      <template>
+        <dom-bind>
+          <template>
+            <section class="demo-snippet">
+              <div class="demo-header">
+                <div class="demo-actions">
+                  <cells-st-button>
+                    <button id="path-start">Run</button>
+                  </cells-st-button>
+                </div>
+                <div class="demo-result">
+                  <pre id="path-response"><code class="language-json"></code></pre>
+                </div>
+              </div>
+              <cells-generic-dp id="path" host="https://swapi.co/api" path="people/1"></cells-generic-dp>
+            </section>
+          </template>
+        </dom-bind>
+        <script src="./js/demo-script.js"></script>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="Custom method" description="[method] defines the HTTP Request Method to perform">
+      <template>
+        <dom-bind>
+          <template>
+            <section class="demo-snippet">
+              <div class="demo-header">
+                <cells-select id="method-list" label="Method" placeholder="">
+                  <div>GET</div>
+                  <div>POST</div>
+                  <div>PUT</div>
+                  <div>PATCH</div>
+                  <div>DELETE</div>
+                </cells-select>
+                <div class="demo-actions">
+                  <cells-st-button>
+                    <button id="method-start">Run</button>
+                  </cells-st-button>
+                </div>
+                <p class="info">
+                  <b>Info</b>:
+                  <a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html" target="_blank">W3C HTTP Request
+                    Methods</a>
+                </p>
+                <div class="demo-result">
+                  <pre id="method-response"><code class="language-json"></code></pre>
+                </div>
+              </div>
+              <cells-generic-dp id="method" host="http://httpbin.org" path="[[lowerMethod]]" method="[[upperMethod]]"></cells-generic-dp>
+            </section>
+          </template>
+        </dom-bind>
+        <script src="./js/demo-script.js"></script>
+        <script>
+          document.addEventListener('WebComponentsReady', function() {
+            var demo = document.querySelector('dom-bind');
+            demo.$['method-list'].addEventListener('selected-changed', (e) => {
+              demo.lowerMethod = demo.$['method-list'].value.toLowerCase();
+              demo.upperMethod = demo.$['method-list'].value.toUpperCase();
+            });
+          });
+        </script>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="Custom params" description='[params] will be added as: ?page=3'>
+      <template>
+        <dom-bind>
+          <template>
+            <section class="demo-snippet">
+              <div class="demo-header">
+                <div class="demo-actions">
+                  <cells-st-button>
+                    <button id="params-start">Run</button>
+                  </cells-st-button>
+                </div>
+                <div class="demo-result">
+                  <pre id="params-response"><code class="language-json"></code></pre>
+                </div>
+              </div>
+              <cells-generic-dp id="params" host="https://swapi.co" path="api/species/" params='{"page": "3"}'></cells-generic-dp>
+            </section>
+          </template>
+        </dom-bind>
+        <script src="./js/demo-script.js"></script>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="Custom body" description="Use [body] to send any payload">
+      <template>
+        <dom-bind>
+          <template>
+            <section class="demo-snippet">
+              <div class="demo-header">
+                <div class="demo-actions">
+                  <cells-st-button>
+                    <button id="body-start">Run</button>
+                  </cells-st-button>
+                </div>
+                <div class="demo-result">
+                  <pre id="body-response"><code class="language-json"></code></pre>
+                </div>
+              </div>
+              <cells-generic-dp id="body" host="http://httpbin.org" path="post" method="post" body='{"key":"value"}'></cells-generic-dp>
+            </section>
+          </template>
+        </dom-bind>
+        <script src="./js/demo-script.js"></script>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="Custom headers" description="Use [headers] to customize request headers">
+      <template>
+        <dom-bind>
+          <template>
+            <section class="demo-snippet">
+              <div class="demo-header">
+                <div class="demo-actions">
+                  <cells-st-button>
+                    <button id="headers-start">Run</button>
+                  </cells-st-button>
+                </div>
+                <p class="info">
+                  <b>Info</b>:
+                  <a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html" target="_blank">W3C HTTP Request
+                    Headers</a>
+                </p>
+                <div class="demo-result">
+                  <pre id="headers-response"><code class="language-json"></code></pre>
+                </div>
+              </div>
+              <cells-generic-dp id="headers" host="https://swapi.co/api/planets/" headers='{"Accept":"*/*", "Content-Type": "application/json"}'></cells-generic-dp>
+            </section>
+          </template>
+        </dom-bind>
+        <script src="./js/demo-script.js"></script>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="Artichoke Login + Logout" description="Handle tsec within Artichoke environment">
+      <template>
+        <dom-bind>
+          <template>
+            <cells-generic-dp id="login-dp" verbose host="[[host]]" path="TechArchitecture/mx/grantingTicket/V02"
+              method="POST"></cells-generic-dp>
+            <cells-generic-dp id="logout-dp" verbose requires-token host="[[host]]" path="TechArchitecture/mx/grantingTicket/V02"
+              method="DELETE"></cells-generic-dp>
+            <div class="inner">
+              <p>Granting Ticket</p>
+              <ul>
+                <li>
+                  Request Method: POST
+                </li>
+                <li>
+                  Request Method: DELETE
+                </li>
+              </ul>
+            </div>
+          </template>
+        </dom-bind>
+        <script>
+          document.addEventListener('WebComponentsReady', function() {
+            var artichokeDemo = document.querySelector('dom-bind');
+            artichokeDemo.host = 'https://artichoke.platform.bbva.com';
+            artichokeDemo.$[ 'logout-dp' ].addEventListener('request-success', function() {
+              sessionStorage.removeItem('tsec');
+            });
+            artichokeDemo.$[ 'login-dp' ].addEventListener('request-success', function() {
+              sessionStorage.setItem('tsec', artichokeDemo.$[ 'login-dp' ].getLastRequest().getResponseHeader('tsec'));
+              artichokeDemo.$[ 'logout-dp' ].generateRequest();
+            });
+            artichokeDemo.$[ 'login-dp' ].set('body', { 'authentication': { 'userID': '1234567890', 'consumerID': '10000033', 'authenticationType': '02', 'authenticationData': [ { 'idAuthenticationData': 'password', 'authenticationData': [ '112233' ] } ] }, 'backendUserRequest': { 'userId': '', 'accessCode': '1234567890', 'dialogId': '' } });
+            artichokeDemo.$[ 'login-dp' ].generateRequest();
+          });
+        </script>
+      </template>
+    </cells-demo-case>
+  </cells-demo-helper>
+</body>
+
+</html>

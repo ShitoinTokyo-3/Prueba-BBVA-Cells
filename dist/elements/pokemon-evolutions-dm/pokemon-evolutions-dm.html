@@ -1,0 +1,79 @@
+<link rel="import" href="../../bower_components/cells-generic-dp/cells-generic-dp.html">
+
+<dom-module id="pokemon-evolutions-dm">
+
+  <template  >
+    <cells-generic-dp
+      id="ajax"
+      host="{{data.species.url}}"
+      on-request-success="_onResponse"
+      auto
+    ></cells-generic-dp>
+
+    <cells-generic-dp
+        id="ajaxEvolutions"
+        on-request-success="_onResponseEvolutions"
+    ></cells-generic-dp>
+    
+  </template>
+
+  <script>
+    class PokemonEvolutionsDm extends Polymer.Element {
+
+      static get is() {
+        return 'pokemon-evolutions-dm';
+      }
+
+      // Declare properties for the element's public API
+      static get properties() {
+        return {
+          data: {
+            type: Object,
+            value: function() {
+              return {};
+            }
+          },
+          urlEvolutions: {
+            type: String
+          },
+          dataUrl: {
+            type: Array,
+            value: function() {
+              return [];
+            }
+          }
+        };
+      }
+
+      _onResponse(e) {
+        const urlEvolutions = e.detail.evolution_chain?.url;
+        if (urlEvolutions) {
+          this.$.ajaxEvolutions.host = urlEvolutions;
+          this.$.ajaxEvolutions.generateRequest();
+        }
+      }
+
+      _onResponseEvolutions(e) {
+        const iterarEvlutions = (evolutions) => {
+          this.dataUrl.push({
+            name: evolutions.species.name,
+            url: `https://pokeapi.co/api/v2/pokemon/${evolutions.species.name}`
+          });
+          if (evolutions.evolves_to.length) {
+            iterarEvlutions(evolutions.evolves_to[0]);
+          }
+        };
+        iterarEvlutions(e.detail.chain);
+        this.dispatchEvent(new CustomEvent('data-success-evolutions', {
+          bubbles: true,
+          composed: true,
+          detail: this.dataUrl
+        }));
+        this.dataUrl = [];
+      }
+    }
+
+    customElements.define(PokemonEvolutionsDm.is, PokemonEvolutionsDm);
+  </script>
+
+</dom-module>

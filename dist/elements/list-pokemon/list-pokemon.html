@@ -1,0 +1,93 @@
+<link rel="import" href="../../bower_components/cells-image-card/cells-image-card.html">
+<link rel="import" href="../../bower_components/cells-st-button/cells-st-button.html">
+
+<dom-module id="list-pokemon">
+
+  <template>
+    <style>
+
+      .container-card{
+        width: 250px;
+        margin: 20px;
+      }
+      .container-list-pokemon{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        width: 75vw;
+        margin: auto;
+      }
+
+
+    </style>
+
+    <div class="container-list-pokemon">
+      <dom-repeat items="{{data}}">
+        <template>
+          <div class="container-card">
+              <cells-image-card
+                  class="card"
+                heading="{{item.name}}" 
+                alt="{{item.name}}" 
+                image-url="{{item.sprites.front_default}}" 
+                tags="Specie: {{item.species.name}}" 
+                >
+              <div slot="card-content">
+                <cells-st-button
+                  on-click="navigateToDetail"
+                >
+                  <button>Detail</button>
+                </cells-st-button>
+              </div>
+              </cells-image-card>
+          </div>
+        </template>
+      </dom-repeat>
+    </div>
+      
+ 
+  </template>
+
+  <script>
+    class ListPokemon extends Polymer.Element {
+
+      static get is() {
+        return 'list-pokemon';
+      }
+
+      // Declare properties for the element's public API
+      static get properties() {
+        return {
+          data: {
+            type: Array,
+            value: function() {
+              return [];
+            }
+          }
+        };
+      }
+
+
+      getData(e) {
+        this.data = [
+          ...this.data,
+          e
+        ].sort((a, b) => {
+          return a.id - b.id;
+        });
+      }
+
+      navigateToDetail(e) {
+        this.dispatchEvent(new CustomEvent('navigate-to-detail', {
+          bubbles: true,
+          composed: true,
+          detail: { idPokemon: e.model.__data.item.id }
+        }));
+      }
+
+    }
+
+    customElements.define(ListPokemon.is, ListPokemon);
+  </script>
+
+</dom-module>

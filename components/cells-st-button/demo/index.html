@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="es-ES">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  <title>Demo cells-st-button</title>
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+  <link rel="import" href="../../cells-demo-helper/cells-demo-helper.html">
+  <link rel="lazy-import" href="../../coronita-icons/coronita-icons.html">
+  <link rel="lazy-import" href="../../iron-icon/iron-icon.html">
+  <link rel="lazy-import" href="../cells-st-button.html">
+  <link rel="lazy-import" href="css/demo-styles.html">
+
+</head>
+
+<body unresolved style="margin: 0;">
+  <cells-demo-helper
+    available-themes='["cells-coronita-base-theme", "cells-banking-theme"]'
+    resolution="mobile">
+    <cells-demo-case heading="Default buttons">
+      <template>
+        <custom-style>
+          <style>
+            .subtext {
+              font-size: var(--cells-st-button-subtext-size, 0.6875rem);
+              font-weight: 500;
+              display: block;
+              @apply --cells-st-button-subtext;
+            }
+          </style>
+        </custom-style>
+
+        <cells-st-button>
+          <button>Default</button>
+        </cells-st-button>
+
+        <cells-st-button>
+          <button>
+              Default
+              <span class="subtext">
+                With subtext
+              </span>
+            </button>
+        </cells-st-button>
+
+        <cells-st-button class="primary">
+          <button>Primary</button>
+        </cells-st-button>
+
+        <cells-st-button class="secondary">
+          <button>Secondary</button>
+        </cells-st-button>
+
+        <cells-st-button class="tertiary">
+          <button>Tertiary</button>
+        </cells-st-button>
+
+        <cells-st-button class="quaternary">
+          <button>Quaternary</button>
+        </cells-st-button>
+
+        <cells-st-button class="neutral">
+          <button>Neutral</button>
+        </cells-st-button>
+
+        <cells-st-button class="link">
+          <button>Link</button>
+        </cells-st-button>
+
+        <cells-st-button class="secondary-light-background">
+          <button>Secondary light background</button>
+        </cells-st-button>
+
+        <cells-st-button class="aditional">
+          <button>Aditional</button>
+        </cells-st-button>
+
+        <p>
+          This
+          <cells-st-button class="transparent"><button>text</button></cells-st-button> <span>is a cells-st-button with class "transparent"</span>. It can be used
+          to wrap elements like icons:
+          <cells-st-button class="transparent"><button><cells-atom-icon class="btn-icon icon-size-16" icon="coronita:info"></cells-atom-icon></button></cells-st-button>
+        </p>
+
+        <div class="dark-bg">
+          <cells-st-button class="primary on-dark">
+            <button disabled>Disabled on dark</button>
+          </cells-st-button>
+        </div>
+
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="Disabled buttons">
+      <template>
+        <custom-style>
+          <style>
+            .subtext {
+              font-size: var(--cells-st-button-subtext-size, 0.6875rem);
+              font-weight: 500;
+              display: block;
+              @apply --cells-st-button-subtext;
+            }
+          </style>
+        </custom-style>
+        <cells-st-button>
+          <button disabled>Default</button>
+        </cells-st-button>
+
+        <cells-st-button>
+          <button disabled>Default <span class="subtext">With subtext</span></button>
+        </cells-st-button>
+
+        <cells-st-button class="primary">
+          <button disabled>Primary</button>
+        </cells-st-button>
+
+        <cells-st-button class="secondary">
+          <button disabled>Secondary</button>
+        </cells-st-button>
+
+        <cells-st-button class="tertiary">
+          <button disabled>Tertiary</button>
+        </cells-st-button>
+
+        <cells-st-button class="quaternary">
+          <button disabled>Quaternary</button>
+        </cells-st-button>
+
+        <cells-st-button class="white-core-blue">
+          <button disabled>Quaternary</button>
+        </cells-st-button>
+
+        <cells-st-button class="neutral">
+          <button disabled>Neutral</button>
+        </cells-st-button>
+
+        <cells-st-button class="link">
+          <button disabled>Link</button>
+        </cells-st-button>
+
+        <cells-st-button class="secondary-light-background">
+          <button disabled>Secondary light background</button>
+        </cells-st-button>
+
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="Size examples">
+      <template>
+
+        <cells-st-button class="size-xl">
+          <button>Size XL</button>
+        </cells-st-button>
+
+        <cells-st-button class="size-l">
+          <button>Size L</button>
+        </cells-st-button>
+
+        <cells-st-button class="size-m">
+          <button>Size M</button>
+        </cells-st-button>
+
+        <cells-st-button class="size-s">
+          <button>Size S</button>
+        </cells-st-button>
+
+        <cells-st-button class="size-xs">
+          <button>Size XS</button>
+        </cells-st-button>
+
+        <cells-st-button class="full">
+          <button>Full</button>
+        </cells-st-button>
+
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="With icons and text">
+
+      <template>
+        <custom-style>
+          <style>
+            /** distribution **/
+
+            .subtext {
+              font-size: var(--cells-st-button-subtext-size, 0.6875rem);
+              font-weight: 500;
+              display: block;
+              @apply --cells-st-button-subtext;
+            }
+
+            .btn-contents {
+              display: flex;
+              align-items: center;
+
+              @apply --cells-st-button-composed-contents;
+            }
+
+            .btn-text {
+              padding: 0 0.25em;
+
+              @apply --cells-st-button-composed-text;
+            }
+
+            .btn-icon {
+              flex-shrink: 0;
+              padding: 0 0.25em;
+
+              @apply --cells-st-button-composed-icon;
+            }
+            /** layout **/
+
+            .content-centered {
+              text-align: center;
+              justify-content: center;
+              @apply --cells-st-button-content-centered;
+            }
+
+            .content-left {
+              text-align: left;
+              justify-content: flex-start;
+              @apply --cells-st-button-content-left;
+            }
+
+            .content-right {
+              text-align: right;
+              justify-content: flex-end;
+              @apply --cells-st-button-content-right;
+            }
+          </style>
+        </custom-style>
+        <cells-st-button class="composed">
+          <button>
+              <span class="btn-contents">
+                <span class="btn-text">Btn text</span>
+                <iron-icon class="btn-icon" icon="coronita:unfold"></iron-icon>
+              </span>
+            </button>
+        </cells-st-button>
+
+        <cells-st-button class="composed link">
+          <button>
+              <span class="btn-contents">
+                <iron-icon class="btn-icon" icon="coronita:info"></iron-icon>
+                <span class="btn-text">
+                  Btn text
+                  <span class="subtext">
+                    With subtext
+                  </span>
+                </span>
+              </span>
+            </button>
+        </cells-st-button>
+
+        <cells-st-button class="composed secondary">
+          <button>
+              <span class="btn-contents">
+                <iron-icon class="btn-icon" icon="coronita:info"></iron-icon>
+                <span class="btn-text">
+                  Btn text
+                  <span class="subtext">
+                    With subtext
+                  </span>
+                </span>
+              </span>
+            </button>
+        </cells-st-button>
+
+        <cells-st-button class="composed primary">
+          <button>
+              <iron-icon class="btn-icon" icon="coronita:info"></iron-icon>
+            </button>
+        </cells-st-button>
+
+        <cells-st-button class="composed full">
+          <button>
+              <span class="btn-contents content-centered">
+                <iron-icon class="btn-icon" icon="coronita:info"></iron-icon>
+                <span class="btn-text">
+                  Btn text, center aligned
+                  <span class="subtext">
+                    With subtext
+                  </span>
+                </span>
+              </span>
+            </button>
+        </cells-st-button>
+
+        <cells-st-button class="full composed link">
+          <button>
+              <span class="btn-contents content-left">
+                <iron-icon class="btn-icon" icon="coronita:info"></iron-icon>
+                <span class="btn-text">
+                  Btn text, left aligned
+                  <span class="subtext">
+                    With subtext
+                  </span>
+                </span>
+              </span>
+            </button>
+        </cells-st-button>
+
+        <cells-st-button class="composed full secondary">
+          <button>
+              <span class="btn-contents content-right">
+                <iron-icon class="btn-icon" icon="coronita:info"></iron-icon>
+                <span class="btn-text">
+                  Btn text, right aligned
+                  <span class="subtext">
+                    With subtext
+                  </span>
+                </span>
+              </span>
+            </button>
+        </cells-st-button>
+
+        <cells-st-button class="composed full primary">
+          <button>
+              <span class="btn-contents content-right">
+                <iron-icon class="btn-icon" icon="coronita:info"></iron-icon>
+                <span class="btn-text content-left">
+                  Btn text, right aligned
+                  <span class="subtext">
+                    Left aligned texts
+                  </span>
+                </span>
+              </span>
+            </button>
+        </cells-st-button>
+      </template>
+    </cells-demo-case>
+
+  </cells-demo-helper>
+</body>
+
+</html>

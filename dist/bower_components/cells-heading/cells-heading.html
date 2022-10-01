@@ -1,0 +1,17 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="cells-heading">
+  <template strip-whitespace>
+    <style include="cells-heading-shared-styles">
+      :host {
+        display: block;
+      }
+
+      :host([hidden]) {
+        display: none;
+      }
+    </style>
+    <slot></slot>
+  </template>
+  <script src="cells-heading.js"></script>
+</dom-module>

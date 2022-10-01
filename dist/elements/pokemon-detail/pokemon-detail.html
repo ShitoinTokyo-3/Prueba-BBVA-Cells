@@ -1,0 +1,92 @@
+<link rel="import" href="../../bower_components/cells-image-card/cells-image-card.html">
+<link rel="import" href="../../bower_components/cells-st-button/cells-st-button.html">
+
+<dom-module id="pokemon-detail">
+
+  <template>
+    <style>
+
+      .container-card{
+        width: 300px;
+        margin: auto;
+
+      }
+
+      .list-stats{
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+      }
+      .card-content{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+
+    </style>
+
+        <div class="container-card">
+            <cells-image-card
+            class="card"
+            heading="{{data.name}}" 
+            alt="{{data.name}}" 
+            image-url="{{data.sprites.front_default}}" 
+            tags="Specie: {{data.species.name}}" 
+            >
+            <div slot="card-content" class="card-content">
+                <dom-repeat items="[[data.stats]]">
+                  <template>
+                    <div class="list-stats">
+                      <h3>{{item.stat.name}}</h3>
+                      <p>{{item.base_stat}}</p>
+                    </div>
+                  </template>
+              </dom-repeat>
+              <cells-st-button
+                  on-click="navigateToEvolutions"
+              >
+                  <button>Go to Evolutions</button>
+              </cells-st-button>
+            </div>
+            </cells-image-card>
+        </div> 
+
+      
+ 
+  </template>
+
+  <script>
+    class PokemonDetail extends Polymer.Element {
+
+      static get is() {
+        return 'pokemon-detail';
+      }
+
+      // Declare properties for the element's public API
+      static get properties() {
+        return {
+          data: {
+            type: Object,
+            value: function() {
+              return {};
+            }
+          }
+        };
+      }
+
+
+      navigateToEvolutions(e) {
+        this.dispatchEvent(new CustomEvent('navigate-to-evolutions', {
+          bubbles: true,
+          composed: true,
+          detail: { id: this.data.id }
+        }));
+      }
+    }
+
+    customElements.define(PokemonDetail.is, PokemonDetail);
+  </script>
+
+</dom-module>

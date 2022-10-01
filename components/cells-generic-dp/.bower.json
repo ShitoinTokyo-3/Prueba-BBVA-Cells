@@ -1,0 +1,36 @@
+{
+  "name": "cells-generic-dp",
+  "version": "16.0.0",
+  "description": "A generic Cells data provider",
+  "keywords": [
+    "dp",
+    "data",
+    "provider",
+    "generic",
+    "xhr",
+    "ajax"
+  ],
+  "main": [
+    "cells-generic-dp.html"
+  ],
+  "ignore": [
+    "**/.*"
+  ],
+  "dependencies": {
+    "polymer": "^2.0.0",
+    "cells-ajax": "^13.0.0"
+  },
+  "devDependencies": {
+    "cells-demo-helper": "^12.0.0",
+    "cells-select": "^12.0.0",
+    "cells-st-button": "^12.0.0",
+    "web-component-tester": "^6.0.0",
+    "webcomponentsjs": "^1.0.0",
+    "coronita-icons": "^12.0.0"
+  },
+  "_source": "art://bbvacellsapi/cells-generic-dp",
+  "_target": "^16.0.0",
+  "_release": "16.0.0",
+  "_originalSource": "cells-generic-dp",
+  "_direct": true
+}

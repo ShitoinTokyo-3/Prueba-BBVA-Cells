@@ -1,0 +1,38 @@
+{
+  "name": "cells-ajax",
+  "version": "13.0.0",
+  "description": "Ajax web component with cache and iron-localstorage reponses store",
+  "main": [
+    "cells-ajax.html"
+  ],
+  "keywords": [
+    "web-component",
+    "polymer",
+    "ajax"
+  ],
+  "dependencies": {
+    "cells-http-native": "^13.0.0",
+    "iron-ajax": "PolymerElements/iron-ajax#^2.0.0",
+    "iron-localstorage": "^2.0.0",
+    "polymer": "^2.0.0"
+  },
+  "devDependencies": {
+    "cells-demo-dm-helper": "^10.0.0",
+    "cells-demo-helper": "^12.0.0",
+    "paper-radio-group": "^2.0.0",
+    "paper-styles": "^2.0.0",
+    "paper-dropdown-menu": "^2.0.0",
+    "paper-header-panel": "^2.0.0",
+    "paper-icon-button": "^2.0.0",
+    "paper-item": "^2.0.0",
+    "paper-radio-button": "^2.0.0",
+    "paper-toolbar": "^2.0.0",
+    "iron-image": "^2.0.0",
+    "web-component-tester": "^6.0.0",
+    "webcomponentsjs": "^1.0.0"
+  },
+  "_source": "art://CEL/cells-ajax",
+  "_target": "^13.0.0",
+  "_release": "13.0.0",
+  "_originalSource": "cells-ajax"
+}

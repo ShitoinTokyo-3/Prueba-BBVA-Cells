@@ -1,0 +1,123 @@
+<!doctype html>
+
+<html>
+
+<head>
+
+  <title>cells-icons demo</title>
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+
+  <!-- load default iconset -->
+  <link rel="lazy-import" href="../../coronita-icons/coronita-icons.html">
+  <link rel="import" href="../../cells-demo-helper/cells-demo-helper.html">
+  <link rel="lazy-import" href="../cells-atom-icon.html">
+
+
+  <custom-style>
+    <style is="custom-style">
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      cells-atom-icon {
+        --cells-atom-icon-size: 64px;
+      }
+
+    </style>
+  </custom-style>
+
+</head>
+
+<body ontouchstart style="margin: 0;">
+
+  <cells-demo-helper>
+    <cells-demo-case heading="basic icon">
+      <template>
+        <dom-bind>
+          <template is="dom-bind" id="demo">
+            <custom-style>
+              <style is="custom-style">
+                cells-atom-icon {
+                  --cells-atom-icon-size: 64px;
+                }
+              </style>
+            </custom-style>
+            <cells-atom-icon icon="coronita:BBVAcontigo"></cells-atom-icon>
+          </template>
+        </dom-bind>
+      </template>
+    </cells-demo-case>
+    <cells-demo-case heading="basic src">
+      <template>
+        <dom-bind>
+          <template is="dom-bind" id="demo">
+            <custom-style>
+              <style is="custom-style">
+                cells-atom-icon {
+                  --cells-atom-icon-size: 64px;
+                }
+              </style>
+            </custom-style>
+            <cells-atom-icon src="https://image.flaticon.com/icons/png/128/149/149988.png"></cells-atom-icon>
+          </template>
+        </dom-bind>
+      </template>
+    </cells-demo-case>
+    <cells-demo-case heading="custom style">
+      <template>
+        <dom-bind>
+          <template is="dom-bind" id="demo">
+            <custom-style>
+              <style is="custom-style">
+                cells-atom-icon {
+                  --cells-atom-icon-size: 100px;
+                  color: #043263;
+                }
+              </style>
+            </custom-style>
+            <cells-atom-icon icon="coronita:BBVAcontigo"></cells-atom-icon>
+          </template>
+        </dom-bind>
+      </template>
+    </cells-demo-case>
+    <cells-demo-case heading="custom style applying iron-icon mixin">
+      <template>
+        <dom-bind>
+          <template is="dom-bind" id="demo">
+            <custom-style>
+              <style is="custom-style">
+                cells-atom-icon {
+                  --cells-atom-icon-size: 3rem;
+                  color: #1464A5;
+                  --cells-atom-icon-iron-icon: {
+                     left: 2rem;
+                  }
+                }
+              </style>
+            </custom-style>
+            <cells-atom-icon icon="coronita:francesgo"></cells-atom-icon>
+          </template>
+        </dom-bind>
+      </template>
+    </cells-demo-case>
+    <cells-demo-case heading="disabled">
+      <template>
+        <dom-bind>
+          <template is="dom-bind" id="demo">
+            <custom-style>
+              <style is="custom-style">
+                cells-atom-icon {
+                  --cells-atom-icon-size: 64px;
+                }
+              </style>
+            </custom-style>
+            <cells-atom-icon class="disabled" icon="coronita:BBVAcontigo"></cells-atom-icon>
+          </template>
+        </dom-bind>
+      </template>
+    </cells-demo-case>
+  </cells-demo-helper>
+</body>
+</html>

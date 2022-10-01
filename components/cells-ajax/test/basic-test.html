@@ -1,0 +1,916 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+
+  <!-- Step 1: import the element to test -->
+  <link rel="import" href="../cells-ajax.html">
+</head>
+
+<body>
+  <test-fixture id="TrivialGet">
+    <template>
+      <cells-ajax url="/responds_to_get_with_json"></cells-ajax>
+    </template>
+  </test-fixture>
+  <test-fixture id="ParamsGet">
+    <template>
+      <cells-ajax url="/responds_to_get_with_json" params='{"a": "a"}'></cells-ajax>
+    </template>
+  </test-fixture>
+  <test-fixture id="AutoGet">
+    <template>
+      <cells-ajax auto url="/responds_to_get_with_json"></cells-ajax>
+    </template>
+  </test-fixture>
+  <test-fixture id="TrivialPost">
+    <template>
+      <cells-ajax method="POST" url="/responds_to_post_with_json"></cells-ajax>
+    </template>
+  </test-fixture>
+  <test-fixture id="DebouncedGet">
+    <template>
+      <cells-ajax auto url="/responds_to_debounced_get_with_json" debounce-duration="150"></cells-ajax>
+    </template>
+  </test-fixture>
+  <!-- note(rictic):
+       This makes us dependent on a third-party server, but we need to be able
+       to check what headers the browser actually sends on the wire.
+       If necessary we can spin up our own httpbin server, as the code is open
+       source.
+    -->
+  <test-fixture id="RealPost">
+    <template>
+      <cells-ajax method="POST" url="http://httpbin.org/post"></cells-ajax>
+    </template>
+  </test-fixture>
+  <script>
+
+    // Storage Mock
+    const storageMock = () => {
+      let storage = {};
+      return {
+        setItem: (key, value) => {
+          storage[key] = value || '';
+        },
+        getItem: key => {
+          return storage[key] || null;
+        },
+        removeItem: key => {
+          delete storage[key];
+        },
+        clear: () => {
+          storage = {};
+        },
+        get length() {
+          return Object.keys(storage).length;
+        },
+        key: i => {
+          let keys = Object.keys(storage);
+          return keys[i] || null;
+        }
+      };
+    };
+
+
+    suite('<cells-ajax>', () => {
+      let responseHeaders = {
+        json: { 'Content-Type': 'application/json' },
+        plain: { 'Content-Type': 'text/plain' }
+      };
+      let ajax;
+      let request;
+      let server;
+
+      // A stand-in for Promise.all, as promise-polyfill doesn't polyfill it.
+      const promiseAll = promises => {
+        promises = promises.slice(); // defensive copy
+        return new Promise((resolve, reject) => {
+          let successes = 0;
+          let onSuccess = () => {
+            successes++;
+            if (successes >= promises.length) {
+              resolve();
+            };
+          };
+          for (let i = 0; i < promises.length; i++) {
+            promises[i].then(onSuccess, reject);
+          }
+        });
+      };
+
+      const timePasses = ms => {
+        return new Promise(resolve => {
+          window.setTimeout(() => {
+            resolve();
+          }, ms);
+        });
+      };
+
+      setup(() => {
+
+        window.localStorage = storageMock();
+        window.localStorage.clear();
+
+        server = sinon.fakeServer.create();
+        server.respondWith(
+          'GET',
+          /\/responds_to_get_with_json.*/,
+          [
+            200,
+            responseHeaders.json,
+            '{"success":true}'
+          ]
+        );
+
+        server.respondWith(
+          'POST',
+          '/responds_to_post_with_json',
+          [
+            200,
+            responseHeaders.json,
+            '{"post_success":true}'
+          ]
+        );
+
+        server.respondWith(
+          'GET',
+          '/responds_to_get_with_text',
+          [
+            200,
+            responseHeaders.plain,
+            'Hello World'
+          ]
+        );
+
+        server.respondWith(
+          'GET',
+          '/responds_to_debounced_get_with_json',
+          [
+            200,
+            responseHeaders.json,
+            '{"success": "true"}'
+          ]
+        );
+
+        server.respondWith(
+          'GET',
+          '/responds_endPoint_A',
+          [
+            200,
+            responseHeaders.json,
+            '{"item": "A"}'
+          ]
+        );
+
+        server.respondWith(
+          'GET',
+          '/responds_endPoint_B',
+          [
+            200,
+            responseHeaders.json,
+            '{"item": "B"}'
+          ]
+        );
+
+        server.respondWith(
+          'GET',
+          '/responds_endPoint_C',
+          [
+            200,
+            responseHeaders.json,
+            '{"item": "C"}'
+          ]
+        );
+
+        ajax = fixture('TrivialGet');
+      });
+
+      teardown(() => {
+        server.restore();
+        window.localStorage.clear();
+      });
+
+      suite('when making simple GET requests for JSON', () => {
+        test('has sane defaults that love you', () => {
+          request = ajax.generateRequest();
+
+          server.respond();
+
+          expect(request.response).to.be.ok;
+          expect(request.response).to.be.an('object');
+
+          expect(request.response.success).to.be.equal(true);
+        });
+
+        test('request will be response iron-request Object', () => {
+          let IronRequest = document.createElement('iron-request').constructor;
+          expect(ajax.generateRequest()).to.be.instanceOf(IronRequest);
+        });
+      });
+
+      suite('when properties are changed', () => {
+        test('generates simple-request elements that reflect the change', () => {
+          request = ajax.generateRequest();
+
+          expect(request.xhr.method).to.be.equal('GET');
+
+          ajax.method = 'POST';
+          ajax.url = '/responds_to_post_with_json';
+
+          request = ajax.generateRequest();
+
+          expect(request.xhr.method).to.be.equal('POST');
+        });
+      });
+
+      suite('when generating a request', () => {
+        test('yields an iron-request instance', () => {
+          const IronRequest = customElements.get('iron-request');
+          expect(ajax.generateRequest()).to.be.instanceOf(IronRequest);
+        });
+
+        test('reflects the loading state in the `loading` property', () => {
+          let request = ajax.generateRequest();
+          expect(ajax.loading).to.be.equal(true);
+          server.respond();
+
+          return request.completes.then(() => {
+            return timePasses(1);
+          }).then(() => {
+            expect(ajax.loading).to.be.equal(false);
+          });
+        });
+      });
+
+      suite('when there are multiple requests', () => {
+        let requests;
+
+        setup(() => {
+          requests = [];
+
+          for (let i = 0; i < 3; ++i) {
+            requests.push(ajax.generateRequest());
+          }
+        });
+
+        test('holds all requests in the `activeRequests` Array', () => {
+          expect(requests).to.deep.eql(ajax.activeRequests);
+        });
+
+        test('empties `activeRequests` when requests are completed', () => {
+          server.respond();
+          promiseAll(requests).then(() => {
+            expect(ajax.activeRequests.length).to.be.equal(0);
+          });
+        });
+      });
+
+      suite('when params are changed', () => {
+        test('generates a request that reflects the change', () => {
+          ajax = fixture('ParamsGet');
+          request = ajax.generateRequest();
+
+          expect(request.xhr.url).to.be.equal('/responds_to_get_with_json?a=a');
+
+          ajax.params = { b: 'b' };
+          request = ajax.generateRequest();
+
+          expect(request.xhr.url).to.be.equal('/responds_to_get_with_json?b=b');
+        });
+      });
+
+      suite('the last response', () => {
+        setup(() => {
+          request = ajax.generateRequest();
+          server.respond();
+        });
+
+        test('is accessible as a readonly property', done => {
+          request.completes.then(request => {
+            expect(ajax.lastResponse).to.be.equal(request.response);
+            done();
+          }).catch(done);
+        });
+
+
+        test('updates with each new response', done => {
+          request.completes.then(request => {
+
+            expect(request.response).to.be.an('object');
+            expect(ajax.lastResponse).to.be.equal(request.response);
+
+            ajax.set('handleAs', 'text');
+            request = ajax.generateRequest();
+            server.respond();
+
+            return request.completes;
+
+          }).then(request => {
+
+            expect(request.response).to.be.a('string');
+            expect(ajax.lastResponse).to.be.equal(request.response);
+
+            done();
+
+          }).catch(done);
+        });
+      });
+
+      suite('when making POST requests', () => {
+        setup(() => {
+          ajax = fixture('TrivialPost');
+        });
+
+        test('POSTs the value of the `body` attribute', () => {
+          let requestBody = JSON.stringify({ foo: 'bar' });
+
+          ajax.body = requestBody;
+          ajax.generateRequest();
+
+          expect(server.requests[0]).to.be.ok;
+          expect(server.requests[0].requestBody).to.be.equal(requestBody);
+        });
+
+        test('if `contentType` is set to form encode, the body is encoded', () => {
+          ajax.body = { foo: 'bar\nbip', 'biz bo': 'baz blar' };
+          ajax.contentType = 'application/x-www-form-urlencoded';
+          ajax.generateRequest();
+
+          expect(server.requests[0]).to.be.ok;
+          expect(server.requests[0].requestBody).to.be.equal(
+            'foo=bar%0D%0Abip&biz+bo=baz+blar');
+        });
+
+        test('if `contentType` is json, the body is json encoded', () => {
+          let requestObj = { foo: 'bar', baz: [1, 2, 3] }
+          ajax.body = requestObj;
+          ajax.contentType = 'application/json';
+          ajax.generateRequest();
+
+          expect(server.requests[0]).to.be.ok;
+          expect(server.requests[0].requestBody).to.be.equal(
+            JSON.stringify(requestObj));
+        });
+
+        suite('the examples in the documentation work', () => {
+          test('json content, body attribute is an object', () => {
+            ajax.setAttribute('body', '{"foo": "bar baz", "x": 1}');
+            ajax.contentType = 'application/json';
+            ajax.generateRequest();
+
+            expect(server.requests[0]).to.be.ok;
+            expect(server.requests[0].requestBody).to.be.equal(
+              '{"foo":"bar baz","x":1}');
+          });
+
+          test('form content, body attribute is an object', () => {
+            ajax.setAttribute('body', '{"foo": "bar baz", "x": 1}');
+            ajax.contentType = 'application/x-www-form-urlencoded';
+            ajax.generateRequest();
+
+            expect(server.requests[0]).to.be.ok;
+            expect(server.requests[0].requestBody).to.be.equal(
+              'foo=bar+baz&x=1');
+          });
+        });
+
+        suite('and `contentType` is explicitly set to form encode', () => {
+          test('we encode a custom object', () => {
+            class Foo {
+              constructor(bar) {
+                this.bar = bar;
+              }
+            };
+            let requestObj = new Foo('baz');
+            ajax.body = requestObj;
+            ajax.contentType = 'application/x-www-form-urlencoded';
+            ajax.generateRequest();
+
+            expect(server.requests[0]).to.be.ok;
+            expect(server.requests[0].requestBody).to.be.equal('bar=baz');
+          });
+        })
+
+        suite('and `contentType` isn\'t set', () => {
+          test('we don\'t try to encode an ArrayBuffer', () => {
+            let requestObj = new ArrayBuffer()
+            ajax.body = requestObj;
+            ajax.generateRequest();
+
+            expect(server.requests[0]).to.be.ok;
+            // We give the browser the ArrayBuffer directly, without trying
+            // to encode it.
+            expect(server.requests[0].requestBody).to.be.equal(requestObj);
+          });
+        })
+      });
+
+      suite('when a response handler is bound', () => {
+        let responseHandler;
+
+        setup(() => {
+          responseHandler = sinon.spy();
+          ajax.addEventListener('response', responseHandler);
+        });
+
+        test('calls the handler after every response', done => {
+          ajax.generateRequest();
+          ajax.generateRequest();
+
+          server.respond();
+
+          ajax.lastRequest.completes.then(() => {
+            expect(responseHandler.callCount).to.be.equal(2);
+            done();
+          }).catch(done);
+        });
+      });
+
+      suite('when the response type is `json`', () => {
+        setup(() => {
+          server.restore();
+        });
+
+        test('finds the JSON on any platform', done => {
+          ajax.url = '../bower.json';
+          request = ajax.generateRequest();
+          request.completes.then(() => {
+            expect(ajax.lastResponse).to.be.instanceOf(Object);
+            done();
+          }).catch(e => {
+            done(e);
+          });
+        });
+      });
+
+      suite('when handleAs parameter is `text`', () => {
+
+        test('response type is string', done => {
+
+          ajax.url = '/responds_to_get_with_json';
+          ajax.handleAs = 'text';
+
+          request = ajax.generateRequest();
+          request.completes.then(() => {
+            expect(typeof (ajax.lastResponse)).to.be.equal('string');
+            done();
+          }).catch(e => {
+            done(e);
+          });
+
+          server.respond();
+
+        });
+
+      });
+
+      suite('when a request fails', () => {
+        test('the error event has useful details', done => {
+
+          ajax.url = '/responds_fail_url';
+          ajax.handleAs = 'json';
+          let request = ajax.generateRequest();
+
+          ajax.addEventListener('error', event => {
+            assert.isOk(event.detail.request, 'the error comes with request');
+            assert.isOk(event.detail.error, 'the error comes with error detail');
+            done();
+          });
+
+          server.respond();
+        });
+
+        test('the error comes with the request when rejectWithRequest prop is set to true', done => {
+          ajax.url = '/responds_fail_url';
+          ajax.handleAs = 'json';
+          ajax.rejectWithRequest = true;
+          let request = ajax.generateRequest();
+
+          request.completes.then(data => {
+            done();
+          }).catch(e => {
+            assert.equal(typeof (e.request), 'object', 'the request is an object');
+            done();
+          });
+
+          server.respond();
+        });
+
+        test('the error event comes with the request when rejectWithRequest prop is set to true', done => {
+          ajax.url = '/responds_fail_url';
+          ajax.handleAs = 'json';
+          ajax.rejectWithRequest = true;
+          let request = ajax.generateRequest();
+
+          ajax.addEventListener('error', event => {
+            try {
+              assert.equal(typeof (event.detail.request), 'object', 'the request is an object');
+              done();
+            } catch (e) {
+              done(e);
+            }
+          });
+
+          server.respond();
+        });
+      });
+
+      suite('when handleAs parameter is `json`', () => {
+
+        test('response type is an object', done => {
+
+          let stub = sinon.stub(ajax, 'getResponseCached').withArgs('/responds_to_get_with_json', 'local').returns({ 'foo': 'bar' });
+
+          ajax.url = '/responds_to_get_with_json';
+          ajax.cache = 'local';
+          ajax.handleAs = 'json';
+
+          request = ajax.generateRequest();
+
+          request.completes.then(data => {
+            expect(typeof (ajax.lastResponse)).to.be.equal('object');
+            done();
+          }).catch(e => {
+            done(e);
+          });
+
+          server.respond();
+
+        });
+      });
+
+      suite('when handleAs parameter is `text`', () => {
+
+        test('response type is an string', done => {
+
+          let stub = sinon.stub(ajax, 'getResponseCached').withArgs('/responds_to_get_with_json', 'local').returns('foobar');
+
+          ajax.url = '/responds_to_get_with_json';
+          ajax.cache = 'local';
+          ajax.handleAs = 'text';
+
+          request = ajax.generateRequest();
+
+          request.completes.then(() => {
+            expect(typeof (ajax.lastResponse)).to.be.equal('string');
+            done();
+          }).catch(e => {
+            done(e);
+          });
+
+          server.respond();
+
+        });
+      });
+
+      suite('when set the cache type', () => {
+
+        test('the cache type is local', done => {
+
+          ajax.clearCache('local');
+
+          ajax.url = '/responds_to_get_with_json';
+          ajax.handleAs = 'json';
+          ajax.cache = 'local';
+          ajax.method = 'GET';
+
+          let request = ajax.generateRequest();
+
+          request.completes.then(request => {
+            let response = ajax.getResponseCached('/responds_to_get_with_json', 'local');
+            expect(response).not.be.a('null');
+            expect(request.response).to.deep.equal(response);
+            done();
+          }).catch(done);
+          server.respond();
+        });
+
+        test('the cache type is none', done => {
+
+          ajax.clearCache('memory');
+          ajax.clearCache('local');
+
+          ajax.url = '/responds_to_get_with_json';
+          ajax.handleAs = 'json';
+          ajax.cache = 'none';
+          ajax.method = 'GET';
+
+          let request = ajax.generateRequest();
+
+          request.completes.then(() => {
+            let responseMemory = ajax.getResponseCached('/responds_to_get_with_json', 'memory');
+            let responseLocal = ajax.getResponseCached('/responds_to_get_with_json', 'local');
+            expect(responseMemory).be.a('null');
+            expect(responseLocal).be.a('null');
+            done();
+          }).catch(done);
+
+          server.respond();
+
+        });
+
+        test('the cache type is memory', done => {
+
+          ajax.clearCache('memory');
+
+          ajax.url = '/responds_to_get_with_json';
+          ajax.handleAs = 'json';
+          ajax.cache = 'memory';
+          ajax.method = 'GET';
+
+          let request = ajax.generateRequest();
+
+          request.completes.then(request => {
+            let response = ajax.getResponseCached('/responds_to_get_with_json', 'memory');
+            console.log('memory, response', response);
+            expect(response).not.be.a('null');
+            expect(request.response).to.deep.equal(response);
+            done();
+          }).catch(done);
+
+          server.respond();
+
+        });
+
+      });
+
+      suite('when making a POST over the wire', () => {
+        test('FormData is handled correctly', () => {
+          server.restore();
+          let ajax = fixture('RealPost');
+          let requestBody = new FormData();
+          requestBody.append('a', 'foo');
+          requestBody.append('b', 'bar');
+          ajax.body = requestBody;
+
+          return ajax.generateRequest().completes.then(() => {
+            expect(ajax.lastResponse.headers['Content-Type']).to.match(
+              /^multipart\/form-data; boundary=.*$/);
+
+            expect(ajax.lastResponse.form.a).to.be.equal('foo');
+            expect(ajax.lastResponse.form.b).to.be.equal('bar');
+          });
+        });
+
+        test('json is handled correctly', () => {
+          server.restore();
+          let ajax = fixture('RealPost');
+          ajax.body = JSON.stringify({ a: 'foo', b: 'bar' });
+          ajax.contentType = 'application/json';
+          return ajax.generateRequest().completes.then(() => {
+            expect(ajax.lastResponse.headers['Content-Type']).to.match(
+              /^application\/json(;.*)?$/);
+            expect(ajax.lastResponse.json.a).to.be.equal('foo');
+            expect(ajax.lastResponse.json.b).to.be.equal('bar');
+          });
+        });
+
+        test('urlencoded data is handled correctly', () => {
+          server.restore();
+          let ajax = fixture('RealPost');
+          ajax.body = 'a=foo&b=bar';
+          return ajax.generateRequest().completes.then(() => {
+            expect(ajax.lastResponse.headers['Content-Type']).to.match(
+              /^application\/x-www-form-urlencoded(;.*)?$/);
+
+            expect(ajax.lastResponse.form.a).to.be.equal('foo');
+            expect(ajax.lastResponse.form.b).to.be.equal('bar');
+          });
+        });
+
+        test('xml is handled correctly', () => {
+          server.restore();
+          let ajax = fixture('RealPost');
+
+          let xmlDoc = document.implementation.createDocument(
+            null, "foo", null);
+          let node = xmlDoc.createElement("bar");
+          node.setAttribute("name", "baz");
+          xmlDoc.documentElement.appendChild(node);
+          ajax.body = xmlDoc;
+          return ajax.generateRequest().completes.then(() => {
+            expect(ajax.lastResponse.headers['Content-Type']).to.match(
+              /^application\/xml(;.*)?$/);
+            expect(ajax.lastResponse.data).to.match(
+              /<foo\s*><bar\s+name="baz"\s*\/><\/foo\s*>/);
+          });
+        });
+
+        test('the request is not cached', done => {
+
+          ajax.clearCache('memory');
+
+          ajax.url = '/responds_to_post_with_json';
+          ajax.handleAs = 'json';
+          ajax.cache = 'memory';
+          ajax.method = 'POST';
+          ajax.cacheTime = -9999999999999999999999;
+
+          let request = ajax.generateRequest();
+
+          request.completes.then(() => {
+            let response = ajax.getResponseCached('/responds_to_post_with_json', 'memory');
+            console.log('memory, response', response);
+            expect(response).be.a('null');
+            done();
+          });
+
+          server.respond();
+
+        });
+
+      });
+
+      suite('when making many request over the same component', () => {
+
+        test('with local cache active', done => {
+
+          let ajax = fixture('TrivialGet');
+          ajax.clearCache('local');
+
+          ajax.url = '/responds_endPoint_A';
+          ajax.cache = 'local';
+          ajax.method = 'GET';
+          let requestA = ajax.generateRequest();
+          server.respond();
+          ajax.url = '/responds_endPoint_B';
+          ajax.cache = 'local';
+          ajax.method = 'GET';
+          let requestB = ajax.generateRequest();
+          server.respond();
+          ajax.url = '/responds_endPoint_C';
+          ajax.cache = 'local';
+          ajax.method = 'GET';
+          let requestC = ajax.generateRequest();
+          server.respond();
+          Promise.all([requestA.completes, requestB.completes, requestC.completes]).then(value => {
+            let responseA = ajax.getResponseCached('/responds_endPoint_A', 'local');
+            let responseB = ajax.getResponseCached('/responds_endPoint_B', 'local');
+            let responseC = ajax.getResponseCached('/responds_endPoint_C', 'local');
+            expect(responseA.item).to.be.equal('A');
+            expect(responseB.item).to.be.equal('B');
+            expect(responseC.item).to.be.equal('C');
+            done();
+          }).catch(done);
+        });
+      });
+
+
+      suite('cleaning the cache', () => {
+
+        setup(() => {
+          window.localStorage.setItem('my-other', { 'foo': 'bar' });
+          window.localStorage.setItem('my-other1', { 'foo1': 'bar1' });
+        });
+
+        test('should remove all the keys created by cells-ajax', done => {
+          let ajax = fixture('TrivialGet');
+          let cacheTime = 600000;
+          let requestA;
+          let requestB;
+          let requestC;
+          let expected = {};
+
+          let now = new Date(2016, 5, 13);
+          let fakeCacheTime = now.getTime() + cacheTime;
+          let clock = sinon.useFakeTimers(now.getTime());
+
+          expected = {
+            '/responds_endPoint_A': fakeCacheTime,
+            '/responds_endPoint_B': fakeCacheTime,
+            '/responds_endPoint_C': fakeCacheTime
+          };
+
+          ajax.clearCache('local');
+
+          ajax.url = '/responds_endPoint_A';
+          ajax.cache = 'local';
+          ajax.cacheTime = cacheTime;
+          ajax.method = 'GET';
+          requestA = ajax.generateRequest();
+          server.respond();
+
+          ajax.url = '/responds_endPoint_B';
+          ajax.cache = 'local';
+          ajax.cacheTime = cacheTime;
+          ajax.method = 'GET';
+          requestB = ajax.generateRequest();
+          server.respond();
+
+          ajax.url = '/responds_endPoint_C';
+          ajax.cache = 'local';
+          ajax.cacheTime = cacheTime;
+          ajax.method = 'GET';
+          requestC = ajax.generateRequest();
+          server.respond();
+
+          Promise.all([requestA.completes, requestB.completes, requestC.completes]).then(value => {
+
+            expect(ajax.keysStore).to.have.all.keys(['/responds_endPoint_A', '/responds_endPoint_B', '/responds_endPoint_C']);
+
+            expect(ajax.keysStore).to.deep.eql(expected);
+
+            ajax.clearCache('local');
+
+            expect(window.localStorage.getItem('my-other')).not.to.be.null;
+            expect(window.localStorage.getItem('my-other1')).not.to.be.null;
+
+            expect(window.localStorage.getItem('/responds_endPoint_A')).to.be.null;
+            expect(window.localStorage.getItem('/responds_endPoint_B')).to.be.null;
+            expect(window.localStorage.getItem('/responds_endPoint_C')).to.be.null;
+
+            expect(ajax.keysStore).to.be.empty;
+            clock.restore();
+
+            done();
+          }).catch(done)
+
+        });
+
+        test('should remove one key from localStorage', () => {
+          let ajax = fixture('TrivialGet');
+          window.localStorage.setItem('/responds_endPoint_A', { 'foo': 'bar' });
+          window.localStorage.setItem('/responds_endPoint_B', { 'foo': 'bar' });
+          ajax.removeFromCache('/responds_endPoint_A');
+          expect(window.localStorage.getItem('/responds_endPoint_A')).to.be.null;
+        });
+
+        test('getResponseCached', () => {
+          let ajax = fixture('TrivialGet');
+          ajax.getRequestKey = param => param;
+          ajax.cellsHttp = {
+            toRequestOptions: param => param
+          };
+          ajax.getResponseCached(false, false);
+        });
+
+        test('_discardRequest', () => {
+          let ajax = fixture('TrivialGet');
+          const param = 'Data';
+          ajax.activeRequests = [param];
+          ajax._discardRequest(param);
+          assert.strictEqual(ajax.activeRequests.length, 0);
+        });
+
+        test('getRequestKey', () => {
+          let ajax = fixture('TrivialGet');
+          ajax.requestOptions = {
+            params: [' ']
+          };
+          ajax.getRequestKey(false);
+        });
+
+        test('should remove one key from memory', done => {
+          let ajax = fixture('TrivialGet');
+          let responseA;
+          let now = new Date(2016, 5, 13);
+          let clock = sinon.useFakeTimers(now.getTime());
+          let expected = {};
+
+          ajax.url = '/responds_endPoint_A';
+          ajax.cache = 'memory';
+          ajax.method = 'GET';
+          ajax.cacheTime = 600000;
+
+          expected = {
+            '/responds_endPoint_A': now.getTime() + ajax.cacheTime
+          };
+
+          ajax.generateRequest().completes.then(() => {
+            expect(ajax.keysStore).to.deep.eql(expected);
+            ajax.removeFromCache('/responds_endPoint_A');
+            responseA = ajax.getResponseCached('/responds_endPoint_A', 'memory');
+            expect(responseA).to.be.null;
+            expect(ajax.keysStore).to.be.empty;
+            clock.restore();
+            done();
+          }).catch(done);
+
+          server.respond();
+
+        });
+
+      });
+    });
+
+
+  </script>
+
+</body>
+
+</html>

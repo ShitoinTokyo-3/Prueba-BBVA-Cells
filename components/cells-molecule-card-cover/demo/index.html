@@ -1,0 +1,138 @@
+<!doctype html>
+
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  <title>Demo cells-molecule-card-cover</title>
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+  <link rel="import" href="../../cells-demo-helper/cells-demo-helper.html">
+  <link rel="lazy-import" href="../../cells-st-button/cells-st-button.html">
+  <link rel="lazy-import" href="../../coronita-icons/coronita-icons.html">
+  <link rel="lazy-import" href="../cells-molecule-card-cover.html">
+  <link rel="lazy-import" href="css/demo-styles.html">
+</head>
+
+<body unresolved ontouchstart style="margin: 0;">
+
+  <cells-demo-helper available-themes='["cells-coronita-base-theme", "cells-banking-theme"]'
+    resolution="mobile">
+
+    <cells-demo-case heading="Default" description="Just with imageSrc">
+      <template>
+        <cells-molecule-card-cover alt="Visa card" image-src="https://openapi.bbva.com/ccds/covers?&default_image=true&v=4&country=es&app_id=com.bbva.buzz&pg=0000003514">
+        </cells-molecule-card-cover>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="Custom size" description="imageSrc and custom width">
+      <template>
+        <cells-molecule-card-cover width="160" alt="Visa card" image-src="https://openapi.bbva.com/ccds/covers?&default_image=true&v=4&country=es&app_id=com.bbva.buzz&pg=0000003514">
+        </cells-molecule-card-cover>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="With fallback image" description="Using default-image for fallback image, using incorrect imageSrc">
+      <template>
+        <cells-molecule-card-cover image-src="fakepath.png" width="156" height="98" alt="Visa card" default-image="defaultcard.png">
+        </cells-molecule-card-cover>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="With preload and fade" description="Preload, fade and placeholder image">
+      <template>
+        <dom-bind>
+          <template>
+
+            <cells-molecule-card-cover width="156" height="98" alt="Visa card" preload fade placeholder="placeholder.png">
+            </cells-molecule-card-cover>
+
+            <div>
+              <cells-st-button>
+                <button on-click="imageLoad">
+                  Load image
+                </button>
+              </cells-st-button>
+            </div>
+          </template>
+        </dom-bind>
+        <script>
+          document.addEventListener('WebComponentsReady', function() {
+            var tbind = document.querySelector('dom-bind');
+            var elem = document.querySelector('cells-molecule-card-cover');
+            tbind.imageLoad = function() {
+              elem.set('imageSrc', 'false');
+              elem.set('imageSrc', 'https://openapi.bbva.com/ccds/covers?&default_image=true&v=4&country=es&app_id=com.bbva.buzz&pg=0000003514');
+            };
+          });
+        </script>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="With overlay and icon" description="showOverlay and icon">
+      <template>
+        <cells-molecule-card-cover show-overlay icon="coronita:block" width="242" height="153" alt="Visa card"
+          image-src="https://openapi.bbva.com/ccds/covers?&default_image=true&v=4&country=es&app_id=com.bbva.buzz&pg=0000003514">
+        </cells-molecule-card-cover>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="With overlay, icon and text" description="showOverlay, icon, text, custom icon size">
+      <template>
+        <cells-molecule-card-cover show-overlay icon="coronita:block" icon-size="40" text="Lorem ipsum" alt="Visa card"
+          width="242" height="153" image-src="https://openapi.bbva.com/ccds/covers?&default_image=true&v=4&country=es&app_id=com.bbva.buzz&pg=0000003514">
+        </cells-molecule-card-cover>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="Status: locked">
+      <template>
+        <cells-molecule-card-cover width="242" height="153" status="locked" icon="coronita:block" text="Locked" alt="Visa card"
+          image-src="https://openapi.bbva.com/ccds/covers?&default_image=true&v=4&country=es&app_id=com.bbva.buzz&pg=0000003514">
+        </cells-molecule-card-cover>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="Status: activate">
+      <template>
+        <cells-molecule-card-cover width="242" height="153" status="activate" icon="coronita:clock" text="Activate" alt="Visa card"
+          image-src="https://openapi.bbva.com/ccds/covers?&default_image=true&v=4&country=es&app_id=com.bbva.buzz&pg=0000003514">
+        </cells-molecule-card-cover>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="Status: off">
+      <template>
+        <cells-molecule-card-cover width="242" height="153" status="off" icon="coronita:on" text="Off" alt="Visa card"
+          image-src="https://openapi.bbva.com/ccds/covers?&default_image=true&v=4&country=es&app_id=com.bbva.buzz&pg=0000003514">
+        </cells-molecule-card-cover>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="Styling Status" description="Angled overlay status">
+      <template>
+        <cells-molecule-card-cover angled-overlay width="98" status="activate" icon="coronita:clock" icon-size="14" alt="Visa card"
+          image-src="https://openapi.bbva.com/ccds/covers?&default_image=true&v=4&country=es&app_id=com.bbva.buzz&pg=0000003514">
+        </cells-molecule-card-cover>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="Fluid" description="Requires setting width and height to the component">
+      <template>
+        <style>
+          cells-molecule-card-cover {
+            width: 70vw;
+            height: calc(70vw * (63.08/100));
+          }
+        </style>
+        <cells-molecule-card-cover fluid alt="Visa card" image-src="https://openapi.bbva.com/ccds/covers?&default_image=true&v=4&country=es&app_id=com.bbva.buzz&pg=0000003514">
+        </cells-molecule-card-cover>
+      </template>
+    </cells-demo-case>
+
+  </cells-demo-helper>
+
+</body>
+
+</html>

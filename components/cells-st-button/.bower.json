@@ -1,0 +1,31 @@
+{
+  "name": "cells-st-button",
+  "version": "13.8.1",
+  "description": "Styles wrapper for native buttons",
+  "keywords": [
+    "button",
+    "styles"
+  ],
+  "ignore": [],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^2.0.0"
+  },
+  "devDependencies": {
+    "cells-banking-theme": "^12.0.0",
+    "cells-coronita-base-theme": "^12.0.0",
+    "cells-demo-helper": "^12.0.0",
+    "cells-sass": "^2.0.0",
+    "coronita-icons": "^12.0.0",
+    "iron-icon": "^2.0.0",
+    "web-component-tester": "^6.0.0",
+    "webcomponentsjs": "^1.0.0"
+  },
+  "main": [
+    "cells-st-button.html"
+  ],
+  "_source": "art://ca/cells-st-button",
+  "_target": "^13.8.1",
+  "_release": "13.8.1",
+  "_originalSource": "cells-st-button",
+  "_direct": true
+}

@@ -1,0 +1,43 @@
+<link rel="import" href="../../../components/cells-generic-dp/cells-generic-dp.html">
+
+<dom-module id="pokemon-detail-dm">
+
+  <template  >
+    <cells-generic-dp
+      id="ajax"
+      host="https://pokeapi.co/api/v2/pokemon/{{idPokemon}}"
+      on-request-success="_onResponse"
+      auto
+    ></cells-generic-dp>
+  </template>
+
+  <script>
+    class PokemonDetailDm extends Polymer.Element {
+
+      static get is() {
+        return 'pokemon-detail-dm';
+      }
+
+      // Declare properties for the element's public API
+      static get properties() {
+        return {
+          idPokemon: {
+            type: Number,
+          }
+        };
+      }
+
+      _onResponse(e) {
+        this.dispatchEvent(new CustomEvent('data-success-pokemon', {
+          bubbles: true,
+          composed: true,
+          detail: e.detail
+        }));
+      }
+
+    }
+
+    customElements.define(PokemonDetailDm.is, PokemonDetailDm);
+  </script>
+
+</dom-module>

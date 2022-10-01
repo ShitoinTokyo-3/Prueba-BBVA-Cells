@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+
+  <link rel="import" href="../cells-st-button.html">
+</head>
+
+<body>
+  <test-fixture id="myEl">
+    <template>
+      <cells-st-button></cells-st-button>
+    </template>
+  </test-fixture>
+
+  <script>
+    suite('<cells-st-button> tag', function() {
+      var myEl;
+
+      setup(function() {
+        myEl = fixture('myEl');
+      });
+
+      suite('in general', function() {
+        test('the element can be instantiated', function() {
+          assert.isOk(myEl);
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+
+  <!-- Step 1: import the element to test -->
+  <link rel="import" href="../cells-http-native.html">
+</head>
+
+<body>
+  <test-fixture id="default">
+    <template>
+      <cells-http-native></cells-http-native>
+    </template>
+  </test-fixture>
+
+  <script>
+    suite('<cells-http-native> tag', () => {
+      let el;
+
+      setup(() => {
+        el = fixture('default');
+      });
+      suite('functions', () => {
+
+        test('checkIsAJson method', () => {
+          assert.equal(el.checkIsAJson('{"test":"test"}'), true);
+          assert.equal(el.checkIsAJson('Test'), false);
+        });
+
+        test('toRequestOptions method while body not exists', () => {
+          el.url = 'http://test.url';
+          el.method = 'GET';
+          el.params = { param1: '1', param2: '2' }
+          let options = el.toRequestOptions();
+          assert.deepEqual(options, { "url": "http://test.url", "method": "get", "headers": {}, "params": { "param1": "1", "param2": "2" }, "multipart": null, "timeout": 60 });
+        });
+
+        test('toRequestOptions method while body exists', () => {
+          el.url = 'http://test.url';
+          el.method = 'GET';
+          el.params = { param1: '1', param2: '2' }
+          el.body = "{param1:'1', param2:'2'}";
+          let options = el.toRequestOptions();
+          assert.deepEqual(options, { "url": "http://test.url", "method": "get", "headers": {}, "params": "{param1:'1', param2:'2'}", "multipart": null, "timeout": 60 });
+        });
+
+        test('_handleResponse method', done => {
+          let request = { response: 'test' };
+          el.addEventListener('response', e => {
+            assert.equal(e.detail, 'test');
+            done();
+          });
+          el._handleResponse(request);
+        });
+
+        test('_handleResponse method while request is equals to el.lastRequest', done => {
+          let request = { response: 'test' };
+          el._setLastRequest(request);
+          el.addEventListener('response', e => {
+            assert.equal(e.detail, 'test');
+            done();
+          });
+          el._handleResponse(request);
+        });
+
+        test('_handleError method', done => {
+          let request = { response: 'error' };
+          let error = { message: 'error' };
+          el.addEventListener('error', e => {
+            assert.deepEqual(e.detail, { request: { response: 'error' }, error: { message: 'error' } });
+            done();
+          });
+          el._handleError(request, error);
+        });
+
+        test('_handleError method while request is equals to el.lastRequest', done => {
+          let request = { response: 'error' };
+          let error = { message: 'error' };
+          let stubConsole = sinon.stub(console, 'error');
+          el.verbose = true;
+          el._setLastRequest(request);
+          el.addEventListener('error', e => {
+            assert(stubConsole.called);
+            assert.deepEqual(e.detail, { request: { response: 'error' }, error: { message: 'error' } });
+            done();
+          });
+          el._handleError(request, error);
+          stubConsole.restore();
+        });
+
+        test('_discardRequest method', () => {
+          assert.isUndefined(el._discardRequest());
+        });
+
+        test('generateRequest while Http engine is not installed', () => {
+          let stubConsole = sinon.stub(console, 'warn');
+          window.CellsNativePlugins = {};
+          el.generateRequest();
+          assert(stubConsole.called);
+        });
+
+        suite('extractContentTypeFromHeaders method', () => {
+          test('extractContentTypeFromHeaders without Content-Type in headers', () => {
+            let headers = '{\"date\":\"Mon, 14 Oct 2019 16:08:31 GMT\",\"x-frame-options\":\"sameorigin\",\"access-control-allow-headers\":\"Accept, Content-Type, tsec, consumerrequestid, authenticationchallenge, authenticationtype, authenticationdata, authenticationstate, authenticationresponse, contactid, consumeruuid, consumerapplicationid, perimetertsec, authorization, responsewarningcode, responsewarningdescription, cuf, prefer, phoneNumber, Location, X-RHO-PARENTSPANID, X-RHO-TRACEID, preferredauthenticationtype, X-HTTP-Method-Override, Access-Control-Allow-Methods, iv-remote-address, thirdparty-x-forwarded-for, thirdparty-user-agent, thirdparty-geolocation, thirdparty-calculated-scoring, thirdparty-deviceid, vnd.bbva.security-client-certificate, order-preferredaction, vnd.bbva.user-id\",\"access-control-allow-methods\":\"GET, POST, DELETE, PUT, OPTIONS, PATCH\",\"access-control-expose-headers\":\"Accept, Content-Type, tsec, consumerrequestid, authenticationchallenge, authenticationtype, authenticationdata, authenticationstate, authenticationresponse, contactid, consumeruuid, consumerapplicationid, perimetertsec, authorization, responsewarningcode, responsewarningdescription, cuf, prefer, phoneNumber, Location, X-RHO-PARENTSPANID, X-RHO-TRACEID, preferredauthenticationtype, X-HTTP-Method-Override, Access-Control-Allow-Methods, iv-remote-address, thirdparty-x-forwarded-for, thirdparty-user-agent, thirdparty-geolocation, thirdparty-calculated-scoring, thirdparty-deviceid, vnd.bbva.security-client-certificate, order-preferredaction, vnd.bbva.user-id\",\"access-control-allow-origin\":\"*\",\"referrer-policy\":\"same-origin\",\"cache-control\":\"no-cache,no-store,must-revalidate\"}';
+
+            assert.isUndefined(el.extractContentTypeFromHeaders(headers));
+          });
+
+          test('extractContentTypeFromHeaders with Content-Type in headers', () => {
+            let headers = '{\"date\":\"Mon, 14 Oct 2019 16:08:31 GMT\",\"x-frame-options\":\"sameorigin\",\"access-control-allow-headers\":\"Accept, Content-Type, tsec, consumerrequestid, authenticationchallenge, authenticationtype, authenticationdata, authenticationstate, authenticationresponse, contactid, consumeruuid, consumerapplicationid, perimetertsec, authorization, responsewarningcode, responsewarningdescription, cuf, prefer, phoneNumber, Location, X-RHO-PARENTSPANID, X-RHO-TRACEID, preferredauthenticationtype, X-HTTP-Method-Override, Access-Control-Allow-Methods, iv-remote-address, thirdparty-x-forwarded-for, thirdparty-user-agent, thirdparty-geolocation, thirdparty-calculated-scoring, thirdparty-deviceid, vnd.bbva.security-client-certificate, order-preferredaction, vnd.bbva.user-id\",\"access-control-allow-methods\":\"GET, POST, DELETE, PUT, OPTIONS, PATCH\",\"access-control-expose-headers\":\"Accept, Content-Type, tsec, consumerrequestid, authenticationchallenge, authenticationtype, authenticationdata, authenticationstate, authenticationresponse, contactid, consumeruuid, consumerapplicationid, perimetertsec, authorization, responsewarningcode, responsewarningdescription, cuf, prefer, phoneNumber, Location, X-RHO-PARENTSPANID, X-RHO-TRACEID, preferredauthenticationtype, X-HTTP-Method-Override, Access-Control-Allow-Methods, iv-remote-address, thirdparty-x-forwarded-for, thirdparty-user-agent, thirdparty-geolocation, thirdparty-calculated-scoring, thirdparty-deviceid, vnd.bbva.security-client-certificate, order-preferredaction, vnd.bbva.user-id\",\"access-control-allow-origin\":\"*\",\"referrer-policy\":\"same-origin\",\"content-type\":\"multipart/form-data; charset=UTF-8\",\"cache-control\":\"no-cache,no-store,must-revalidate\"}';
+
+            assert.equal(el.extractContentTypeFromHeaders(headers), 'multipart/form-data; charset=UTF-8');
+          });
+
+          test('extractContentTypeFromHeaders with incorrect headers', () => {
+            let headers = '"content-type": "multipart\/form-data; charset=UTF-8"';
+
+            assert.isNull(el.extractContentTypeFromHeaders(headers));
+          });
+        });
+
+        suite('generateRequest hybrid', () => {
+          const spyFunctionOneParam = (param, f1, f2) => f1('responseF1');
+          const spyFunctionThreeParams = (param1, param2, param3, f1, f2) => f1('responseF1');
+          setup(() => {
+            window.CellsNativePlugins = {
+              Http: {
+                sslPinning: spyFunctionOneParam,
+                acceptAllCerts: spyFunctionOneParam,
+                get: spyFunctionThreeParams,
+                post: spyFunctionThreeParams,
+                put: spyFunctionThreeParams,
+                delete: spyFunctionThreeParams,
+                head: spyFunctionThreeParams,
+                patch: spyFunctionThreeParams,
+                cleanAllCookies: spyFunctionOneParam
+              }
+            };
+          });
+          test('generateRequest without data', () => {
+            let spyGet = sinon.spy(window.CellsNativePlugins.Http, 'get');
+            el.generateRequest();
+            assert(spyGet.called);
+          });
+          test('generateRequest with body empty', () => {
+            let spyGet = sinon.spy(window.CellsNativePlugins.Http, 'get');
+            el.params = '';
+            el.generateRequest();
+            assert(spyGet.called);
+          });
+          test('generateRequest with timeout', () => {
+            let spyGet = sinon.spy(window.CellsNativePlugins.Http, 'get');
+            el.timeout = 5;
+            el.generateRequest();
+            assert.deepEqual(spyGet.getCall(0).args[5], null);
+            assert.deepEqual(spyGet.getCall(0).args[6], 5);
+
+            el.method = 'POST';
+            spyGet = sinon.spy(window.CellsNativePlugins.Http, 'post');
+            el.timeout = 5;
+            el.generateRequest();
+            assert.deepEqual(spyGet.getCall(0).args[5], null);
+            assert.deepEqual(spyGet.getCall(0).args[6], 5);
+
+            el.method = 'PUT';
+            spyGet = sinon.spy(window.CellsNativePlugins.Http, 'put');
+            el.timeout = 5;
+            el.generateRequest();
+            assert.deepEqual(spyGet.getCall(0).args[5], null);
+            assert.deepEqual(spyGet.getCall(0).args[6], 5);
+
+            el.method = 'HEAD';
+            spyGet = sinon.spy(window.CellsNativePlugins.Http, 'head');
+            el.timeout = 5;
+            el.generateRequest();
+            assert.deepEqual(spyGet.getCall(0).args[5], null);
+            assert.deepEqual(spyGet.getCall(0).args[6], 5);
+
+            el.method = 'DELETE';
+            spyGet = sinon.spy(window.CellsNativePlugins.Http, 'delete');
+            el.timeout = 5;
+            el.generateRequest();
+            assert.deepEqual(spyGet.getCall(0).args[5], null);
+            assert.deepEqual(spyGet.getCall(0).args[6], 5);
+          });
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

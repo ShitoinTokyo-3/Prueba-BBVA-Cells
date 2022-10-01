@@ -1,0 +1,29 @@
+{
+  "name": "cells-molecule-card-cover",
+  "version": "12.2.2",
+  "description": "A card cover with custom size, overlay layer and status",
+  "keywords": [
+    "molecule",
+    "card",
+    "cover",
+    "image"
+  ],
+  "dependencies": {
+    "polymer": "^2.0.0",
+    "cells-atom-icon": "^12.0.0",
+    "iron-image": "^2.0.0"
+  },
+  "devDependencies": {
+    "cells-banking-theme": "^12.0.0",
+    "cells-coronita-base-theme": "^12.0.0",
+    "cells-demo-helper": "^12.0.0",
+    "cells-sass": "^2.0.0",
+    "cells-st-button": "^12.0.0",
+    "coronita-icons": "^12.0.0",
+    "web-component-tester": "^6.0.0",
+    "webcomponentsjs": "^1.0.0"
+  },
+  "main": [
+    "cells-molecule-card-cover.html"
+  ]
+}

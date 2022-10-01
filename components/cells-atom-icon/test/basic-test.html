@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../cells-atom-icon.html">
+  </head>
+  <body>
+
+    <test-fixture id="icon">
+      <template>
+        <cells-atom-icon icon="banking:B12"></cells-atom-icon>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="src">
+      <template>
+        <cells-atom-icon src="https://picsum.photos/720/360/?random&image=1"></cells-atom-icon>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('<cells-atom-icon>', () => {
+        var icon;
+        var src;
+
+        setup(() => {
+          icon = fixture('icon');
+          src = fixture('src');
+        });
+
+        test('has "icon" property', () => {
+          assert.equal(Polymer.dom(icon.root).querySelector('iron-icon').icon, icon.icon);
+        });
+
+        test('has "src" property', () => {
+          assert.equal(Polymer.dom(src.root).querySelector('iron-icon').src, src.src);
+        });
+      });
+    </script>
+
+  </body>
+</html>

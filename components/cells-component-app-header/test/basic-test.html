@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <link rel="import" href="../cells-component-app-header.html">
+</head>
+
+<body>
+
+  <test-fixture id="default">
+    <template>
+      <cells-component-app-header></cells-component-app-header>
+    </template>
+  </test-fixture>
+
+  <script>
+    suite('<cells-component-app-header>', () => {
+      var el;
+
+      setup(() => {
+        el = fixture('default');
+      });
+
+      suite('Button visibility and icons', () => {
+        test('buttons are hidden if their icons are not set', () => {
+          assert.isTrue(el.shadowRoot.querySelector('.btn-left').hidden);
+          assert.isTrue(el.shadowRoot.querySelector('.btn-right-secondary').hidden);
+          assert.isTrue(el.shadowRoot.querySelector('.btn-right').hidden);
+        });
+
+        test('buttons are shown if their icons are set', () => {
+          el.iconLeft = 'any';
+          el.iconRight = 'any';
+          el.iconRightSecondary = 'any';
+
+          assert.isFalse(el.shadowRoot.querySelector('.btn-left').hidden);
+          assert.isFalse(el.shadowRoot.querySelector('.btn-right-secondary').hidden);
+          assert.isFalse(el.shadowRoot.querySelector('.btn-right').hidden);
+        });
+
+        test('icons have a default icon if iconLeft, iconRight or iconRightSecondary have one of the available default values', () => {
+          el.iconLeft = 'menu';
+          el.iconRight = 'search';
+          el.iconRightSecondary = 'help';
+
+          assert.equal(el.shadowRoot.querySelector('.icon-left').icon, el.iconMenu);
+          assert.equal(el.shadowRoot.querySelector('.icon-right').icon, el.iconSearch);
+          assert.equal(el.shadowRoot.querySelector('.icon-right-secondary').icon, el.iconHelp);
+        });
+
+        test('icons have the value set for iconLeft, iconRight or iconRightSecondary if that value is not one of the default values', () => {
+          el.iconLeft = 'any';
+          el.iconRight = 'any';
+          el.iconRightSecondary = 'any';
+
+          assert.equal(el.shadowRoot.querySelector('.icon-left').icon, el.iconLeft);
+          assert.equal(el.shadowRoot.querySelector('.icon-right').icon, el.iconRight);
+          assert.equal(el.shadowRoot.querySelector('.icon-right-secondary').icon, el.iconRightSecondary);
+        });
+
+        test('icons have a default aria-label if iconLeft, iconRight or iconRightSecondary have one of the available default values', () => {
+          el.iconLeft = 'menu';
+          el.iconRight = 'search';
+          el.iconRightSecondary = 'help';
+
+          assert.equal(el.shadowRoot.querySelector('.icon-left').getAttribute('aria-label'), 'cells-component-app-header-menu-label');
+          assert.equal(el.shadowRoot.querySelector('.icon-right').getAttribute('aria-label'), 'cells-component-app-header-search-label');
+          assert.equal(el.shadowRoot.querySelector('.icon-right-secondary').getAttribute('aria-label'), 'cells-component-app-header-help-label');
+        });
+
+        test('icons doesn\`t have aria-label if iconLeft, iconRight or iconRightSecondary have a custom value', () => {
+          el.iconLeft = 'any';
+          el.iconRight = 'any';
+          el.iconRightSecondary = 'any';
+
+          assert.isFalse(el.shadowRoot.querySelector('.icon-left').hasAttribute('aria-label'));
+          assert.isFalse(el.shadowRoot.querySelector('.icon-right').hasAttribute('aria-label'));
+          assert.isFalse(el.shadowRoot.querySelector('.icon-right-secondary').hasAttribute('aria-label'));
+        });
+
+        test('icons have the aria-label set for iconLeftLabel, iconRightLabel or iconRightSecondaryLabel', () => {
+          el.iconLeft = 'any';
+          el.iconRight = 'any';
+          el.iconRightSecondary = 'any';
+
+          el.iconLeftLabel = 'any';
+          el.iconRightLabel = 'any';
+          el.iconRightSecondaryLabel = 'any';
+
+          assert.equal(el.shadowRoot.querySelector('.icon-left').getAttribute('aria-label'), el.iconLeftLabel);
+          assert.equal(el.shadowRoot.querySelector('.icon-right').getAttribute('aria-label'), el.iconRightLabel);
+          assert.equal(el.shadowRoot.querySelector('.icon-right-secondary').getAttribute('aria-label'), el.iconRightSecondaryLabel);
+        });
+
+        test('using bread and labelRight properties set class to buttons', () => {
+          el.bread = 'lorem';
+          el.labelRight = 'ipsum';
+          console.log(el.shadowRoot.querySelector('.btn-left'));
+          assert.isTrue(el.shadowRoot.querySelector('.btn-left').classList.contains('btn-with-label'));
+          assert.isTrue(el.shadowRoot.querySelector('.btn-right').classList.contains('btn-with-label'));
+        });
+      });
+
+      suite('Header', () => {
+        test('setting headingLevel sets level attribute to cells-heading', () => {
+          el.headingLevel = 2;
+          assert.equal(el.shadowRoot.querySelector('.title').level, el.headingLevel);
+        });
+      });
+
+      suite('Events', () => {
+        test('clicking left button fires "left-button-pressed" event', () => {
+          var spy = sinon.spy();
+          el.addEventListener('left-button-pressed', spy);
+          el.shadowRoot.querySelector('.btn-left').click();
+          assert.isTrue(spy.calledOnce);
+        });
+
+        test('clicking right button fires "right-button-pressed" event', () => {
+          var spy = sinon.spy();
+          el.addEventListener('right-button-pressed', spy);
+          el.shadowRoot.querySelector('.btn-right').click();
+          assert.isTrue(spy.calledOnce);
+        });
+
+        test('clicking right-secondary button fires "right-secondary-button-pressed" event', () => {
+          var spy = sinon.spy();
+          el.addEventListener('right-secondary-button-pressed', spy);
+          el.shadowRoot.querySelector('.btn-right-secondary').click();
+          assert.isTrue(spy.calledOnce);
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

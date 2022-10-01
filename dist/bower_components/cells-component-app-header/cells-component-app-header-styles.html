@@ -1,0 +1,141 @@
+<dom-module id="cells-component-app-header-styles"><template><style>
+@charset "UTF-8";
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  min-height: var(--cells-component-app-header-height, 3.75rem);
+  background-color: var(--cells-component-app-header-bg-color, var(--bbva-navy, #072146));
+  color: var(--cells-component-app-header-color, #fff);
+  font-family: var(--cells-fontDefault, sans-serif);
+  @apply --cells-component-app-header; }
+  :host:after {
+    content: "";
+    display: none;
+    @apply --cells-component-app-header-after; }
+
+:host([hidden]), [hidden] {
+  display: none !important; }
+
+/**
+ * Empty mixins to set outline for :focus and :active states.
+ * These mixins are meant to be set in an application's theme.
+ * --cells-global-focus, --cells-global-active
+ */
+*:focus {
+  @apply --cells-global-focus; }
+
+*:active {
+  @apply --cells-global-active; }
+
+button:active {
+  @apply --cells-global-active; }
+
+/**
+ * Secondary style with white background and blue icons and text by default.
+ */
+:host(.secondary) {
+  background-color: var(--cells-component-app-header-secondary-bg-color, #fff);
+  color: var(--cells-component-app-header-secondary-color, var(--bbva-navy, #072146));
+  height: var(--cells-component-app-header-secondary-height, 3.75rem);
+  @apply --cells-component-app-header-secondary; }
+  :host(.secondary):after {
+    content: "";
+    display: block;
+    @apply --cells-component-app-header-secondary-after; }
+  :host(.secondary) .title {
+    @apply --cells-component-app-header-secondary-title; }
+  :host(.secondary) .btn {
+    color: var(--cells-component-app-header-secondary-btn-color, var(--bbva-navy, #072146));
+    @apply --cells-component-app-header-secondary-btn; }
+
+/**
+ * Button wrappers
+ */
+.nav {
+  display: flex;
+  align-items: center;
+  min-width: var(--cells-component-app-header-btn-size, 3.125rem);
+  @apply --cells-component-app-header-nav; }
+  .nav-left {
+    margin-right: auto;
+    @apply --cells-component-app-header-navleft; }
+  .nav-right {
+    margin-left: auto;
+    text-align: right;
+    white-space: nowrap;
+    @apply --cells-component-app-header-navright; }
+
+.title {
+  text-align: center;
+  font-weight: normal;
+  font-size: 1.125rem;
+  @apply --cells-component-app-header-title; }
+
+/**
+ * Icons
+ */
+.icon-left {
+  @apply --cells-component-app-header-left-icon; }
+
+.icon-right {
+  @apply --cells-component-app-header-right-icon; }
+
+.icon-right-secondary {
+  @apply --cells-component-app-header-right-secondary-icon; }
+
+/**
+ * Buttons
+ */
+.btn {
+  min-width: var(--cells-component-app-header-btn-size, 3.125rem);
+  min-height: var(--cells-component-app-header-btn-size, 3.125rem);
+  color: var(--cells-component-app-header-btn-color, #fff);
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @apply --cells-component-app-header-btn; }
+
+.btn-transparent {
+  background-color: transparent;
+  border: 0; }
+
+.btn-right-secondary {
+  min-width: var(--cells-component-app-header-btn-right-secondary-width, 1.5625rem); }
+
+.btn-with-label {
+  padding: 0 1rem;
+  @apply --cells-component-app-header-btn-with-label; }
+
+/*
+* Breadcrumb
+*/
+.crumb {
+  color: var(--cells-component-app-header-crumb-color, #fff);
+  font-size: 1rem;
+  @apply --cells-component-app-header-crumb; }
+  .crumb::before {
+    content: '•';
+    padding-right: 0.7rem;
+    @apply --cells-component-app-header-crumb-attribute-before; }
+
+.bread {
+  color: var(--cells-component-app-header-bread-color, #fff);
+  font-size: 1rem;
+  padding-left: 0.5rem;
+  @apply --cells-component-app-header-bread; }
+
+/*
+* Label nav right
+*/
+.label-right {
+  color: var(--cells-component-app-header-label-right-color, #fff);
+  padding-left: 0.5rem;
+  font-size: 1rem;
+  @apply --cells-component-app-header-label-right; }
+
+</style></template></dom-module>

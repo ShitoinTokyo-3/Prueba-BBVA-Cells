@@ -1,0 +1,43 @@
+<link rel="import" href="../../bower_components/cells-generic-dp/cells-generic-dp.html">
+
+<dom-module id="list-pokemon-dm">
+
+  <template>
+    <cells-generic-dp
+      id="ajax"
+      host="https://pokeapi.co/api/v2/pokemon/"
+      on-request-success="_onResponse"
+      auto
+    ></cells-generic-dp>
+  </template>
+
+  <script>
+    class ListPokemonDm extends Polymer.Element {
+
+      static get is() {
+        return 'list-pokemon-dm';
+      }
+
+      // Declare properties for the element's public API
+      static get properties() {
+        return {};
+      }
+
+      _onResponse(e) {
+        this.dispatchEvent(new CustomEvent('data-loaded-pokemon', {
+          bubbles: true,
+          composed: true,
+          detail: e.detail.results
+        }));
+      }
+
+      goHome() {
+        this.$.ajax.generateRequest();
+      }
+
+    }
+
+    customElements.define(ListPokemonDm.is, ListPokemonDm);
+  </script>
+
+</dom-module>

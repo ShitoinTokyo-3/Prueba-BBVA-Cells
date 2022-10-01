@@ -1,0 +1,454 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+
+  <link rel="import" href="../cells-generic-dp.html" />
+</head>
+<body>
+  <test-fixture id="myEl">
+    <template>
+      <cells-generic-dp></cells-generic-dp>
+    </template>
+  </test-fixture>
+
+  <script>
+    /* global suite, setup, fixture, teardown, test, sinon */
+    /* eslint no-unused-expressions: 0*/
+    suite('<cells-generic-dp/> tag', function() {
+      var myEl;
+
+      setup(function() {
+        myEl = fixture('myEl');
+      });
+
+      teardown(function() {
+        myEl.remove();
+        sessionStorage.clear();
+      });
+
+      suite('_mergeHeaders', function() {
+        test('by default, returns [_headers] value', function() {
+          expect(myEl._mergeHeaders()).to.be.deep.equal(myEl._headers);
+        });
+        test('returns [_headers] value if [headers] is valid but empty', function() {
+          myEl.set('headers', {});
+          expect(myEl._mergeHeaders()).to.be.deep.equal(myEl._headers);
+        });
+        test('merges default headers with custom ones', function() {
+          var fakeHeader = {
+            key: 'value'
+          };
+          myEl.set('headers', fakeHeader);
+          var result = myEl._mergeHeaders();
+          expect(result.key).not.to.be.undefined;
+        });
+        test('ignores invalid semaas configuration', function() {
+          var semaasData = {
+            'x-rho-traceid': null,
+            'x-rho-parentspanid': null
+          };
+
+          Object.keys(semaasData).forEach(function(key) {
+            var value = semaasData[ key ];
+
+            sessionStorage.setItem(key, value);
+          });
+
+          var result = myEl._mergeHeaders();
+          expect(result).to.not.have.all.keys('x-rho-traceid', 'x-rho-parentspanid');
+        });
+        test('merges default headers with semaas configuration', function() {
+          var semaasData = {
+            'x-rho-traceid': 'fake-rho-traceid',
+            'x-rho-parentspanid': 'fake-rho-parentspanid'
+          };
+          var expectedSemaasData = Object.assign({}, semaasData);
+
+          Object.keys(semaasData).forEach(function(key) {
+            var value = semaasData[ key ];
+
+            sessionStorage.setItem(key, value);
+          });
+
+          var result = myEl._mergeHeaders();
+          expect(result).to.include(expectedSemaasData);
+        });
+        test('merges default headers without semaas configuration', function() {
+          var semaasData = {
+            'x-rho-traceid': 'fake-rho-traceid',
+            'x-rho-parentspanid': 'fake-rho-parentspanid'
+          };
+          var storedSemaasData = Object.assign({}, semaasData);
+
+          Object.keys(semaasData).forEach(function(key) {
+            var value = semaasData[ key ];
+
+            sessionStorage.setItem(key, value);
+          });
+          myEl.semaasMonitoring = false;
+          var result = myEl._mergeHeaders();
+          expect(result).not.to.include(storedSemaasData);
+        });
+        test('if [requiresToken] returns "fake_tsec" value', function() {
+          sessionStorage.setItem('tsec', 'fake_tsec');
+          myEl.set('requiresToken', true);
+          var result = myEl._mergeHeaders();
+          expect(result.tsec).not.to.be.undefined;
+          expect(result.tsec).to.be.equal('fake_tsec');
+        });
+        test('if [requiresToken] returns "fake_tsec" value', function() {
+          sessionStorage.setItem('tsec', 'fake_tsec');
+          myEl.set('requiresToken', true);
+          var result = myEl._mergeHeaders();
+          expect(result.tsec).not.to.be.undefined;
+          expect(result.tsec).to.be.equal('fake_tsec');
+        });
+        test('if [requiresToken] and [token - simple] returns expected value', function() {
+          let token = myEl.get('token');
+
+          token = Object.assign({}, token, {
+            key: 'token',
+            headerFieldName: 'token'
+          });
+
+          sessionStorage.setItem('token', 'fake_token');
+          myEl.set('requiresToken', true);
+          myEl.set('token', token);
+          var result = myEl._mergeHeaders();
+          expect(result.token).not.to.be.undefined;
+          expect(result.token).to.be.equal('fake_token');
+        });
+        test('if [requiresToken] and [token - complex] returns expected value', function() {
+          let token = myEl.get('token');
+
+          token = Object.assign({}, token, {
+            key: 'token',
+            path: 'deepProp',
+            headerFieldName: 'Authorization',
+            headerFieldValuePrefix: 'Basic'
+          });
+
+          sessionStorage.setItem('token', JSON.stringify({ deepProp: 'QWxhZGRpbjpPcGVuU2VzYW1l' }));
+          myEl.set('requiresToken', true);
+          myEl.set('token', token);
+          var result = myEl._mergeHeaders();
+          expect(result.Authorization).not.to.be.undefined;
+          expect(result.Authorization).to.be.equal('Basic QWxhZGRpbjpPcGVuU2VzYW1l');
+        });
+        test('if [requiresToken] and [token - complex - storage interface] returns expected value', function() {
+          let token = myEl.get('token');
+
+          token = Object.assign({}, token, {
+            storage: {
+              getItem: function() {
+                return JSON.stringify({ deepProp: 'QWxhZGRpbjpPcGVuU2VzYW1l' });
+              },
+              setItem: function() { }
+            },
+            key: 'token',
+            path: 'deepProp',
+            headerFieldName: 'Authorization',
+            headerFieldValuePrefix: 'Basic'
+          });
+
+          myEl.set('requiresToken', true);
+          myEl.set('token', token);
+          var result = myEl._mergeHeaders();
+          expect(result.Authorization).not.to.be.undefined;
+          expect(result.Authorization).to.be.equal('Basic QWxhZGRpbjpPcGVuU2VzYW1l');
+        });
+      });
+
+      suite('_getTokenStorage', function() {
+        [
+          { input: {}, output: null },
+          { input: { storage: {} }, output: {} },
+          { input: { storage: 'sessionStorage' }, output: window.sessionStorage },
+          { input: { storage: 'localStorage' }, output: window.localStorage }
+        ].forEach(function(params) {
+          test('it should retrieve storage based on given configuration', function() {
+            const { input, output } = params;
+            const result = myEl._getTokenStorage(input);
+
+            expect(result).to.be.deep.equal(output);
+          });
+        });
+      });
+
+      suite('_parseHeadersAsObject', function() {
+        const FAKE_HEADERS_RESPONSE = "tsec: 12345\u000d\u000aconsumerrequestid: cb5e7072-fdb4-48aa-b899-1baef89b9744\u000d\u000acontent-type: application/json; charset=UTF-8\u000d\u000a";
+
+        [
+          { input: '', output: {} },
+          { input: FAKE_HEADERS_RESPONSE, output: { tsec: '12345', consumerrequestid: 'cb5e7072-fdb4-48aa-b899-1baef89b9744', 'content-type': 'application/json; charset=UTF-8' } }
+        ].forEach(function(params) {
+          test('it should parse string headers into an object', function() {
+            const { input, output } = params;
+            const result = myEl._parseHeadersAsObject(input);
+
+            expect(result).to.be.deep.equal(output);
+          });
+        });
+      });
+
+      suite('_parseBodyObject', function() {
+        test('by default, without [body] value, returns null', function() {
+          expect(myEl._parseBodyObject({})).to.be.null;
+        });
+        test('returns null if neither [headers.Content-Type] or [contentType] are defined', function() {
+          myEl.set('body', null);
+          expect(myEl._parseBodyObject({})).to.be.null;
+        });
+        test('works as expected for [contentType] eq. "application/json"', function() {
+          var fakeBody = { key: 'value' };
+          myEl.set('body', fakeBody);
+          myEl.set('contentType', 'application/json');
+          var result = myEl._parseBodyObject({});
+          expect(result).to.be.equal(JSON.stringify(fakeBody));
+        });
+        test('works as expected for [contentType] not eq. "application/json"', function() {
+          var fakeBody = { key: 'value' };
+          myEl.set('body', fakeBody);
+          myEl.set('contentType', 'otherContent');
+          var result = myEl._parseBodyObject({});
+          expect(result).to.be.equal('key=value');
+        });
+        test('works as expected for [headers.Content-Type] eq. "application/json"', function() {
+          var fakeBody = { key: 'value' };
+          myEl.set('body', fakeBody);
+          var result = myEl._parseBodyObject({ 'Content-Type': 'application/json' });
+          expect(result).to.be.equal(JSON.stringify(fakeBody));
+        });
+        test('works as expected for [headers.ContentType] not eq. "application/json"', function() {
+          var fakeBody = { key: 'value' };
+          myEl.set('body', fakeBody);
+          var result = myEl._parseBodyObject({ 'Content-Type': 'other' });
+          expect(result).to.be.equal('key=value');
+        });
+        test('works as expected for [body] eq. stringified JSON object', function() {
+          var fakeBody = { key: 'value' };
+          myEl.set('body', JSON.stringify(fakeBody));
+          var result = myEl._parseBodyObject({ 'Content-Type': 'application/json' });
+          expect(result).to.be.equal(JSON.stringify(fakeBody));
+        });
+        test('returns body as set if its typeof differs from {Object}', function() {
+          myEl.set('body', '@');
+          var result = myEl._parseBodyObject({ 'Content-Type': 'application/json' });
+          expect(result).to.be.an('string');
+        });
+        test('works as expected with [contentType] eq. "text/plain" and [body] being a text value', function() {
+          myEl.set('body', '1234');
+          var result = myEl._parseBodyObject({ 'Content-Type': 'text/plain' });
+          expect(result).to.be.equal('1234');
+        });
+        test('works as expected with [contentType] eq. "text/plain" and [body] being an object', function() {
+          var mockBody = { key: 'value' };
+          myEl.set('body', mockBody);
+          var result = myEl._parseBodyObject({ 'Content-Type': 'text/plain' });
+          expect(result).to.be.equal(JSON.stringify(mockBody));
+        });
+        test('expect an object when property native eq. true and [contentType] eq. "application/json"', function() {
+          const body = { key: 'value' };
+          myEl.set('body', body);
+          myEl.set('native', true);
+          const result = myEl._parseBodyObject({ 'Content-Type': 'application/json' });
+          expect(result).to.be.an.Object
+          expect(result).to.deep.equal(body);
+        });
+        test('expect an object when property native eq. true and [contentType] eq. "text/plain"', function() {
+          const body = { key: 'value' };
+          myEl.set('body', body);
+          myEl.set('native', true);
+          const result = myEl._parseBodyObject({ 'Content-Type': 'text/plain' });
+          expect(result).to.be.an.Object
+          expect(result).to.deep.equal(body);
+        });
+        test('expect a stringified object when property native eq. false and [contentType] eq. "application/json"', function() {
+          const body = { key: 'value' };
+          myEl.set('body', body);
+          myEl.set('native', false);
+          const result = myEl._parseBodyObject({ 'Content-Type': 'application/json' });
+          expect(result).to.be.equal(JSON.stringify(body));
+        });
+        test('expect a stringified object when property native eq. false and [contentType] eq. "text/plain"', function() {
+          const body = { key: 'value' };
+          myEl.set('body', body);
+          myEl.set('native', false);
+          const result = myEl._parseBodyObject({ 'Content-Type': 'text/plain' });
+          expect(result).to.be.equal(JSON.stringify(body));
+        });
+      });
+
+      suite('_emit', function() {
+        test('by default, fires "log" event', function(done) {
+          myEl.addEventListener('log', function _l(e) {
+            myEl.removeEventListener(e.type, _l);
+            done();
+          });
+          myEl._emit();
+        });
+        test('obtains error.message from payload.error {Error}', function(done) {
+          myEl.addEventListener('log', function _l(e) {
+            myEl.removeEventListener(e.type, _l);
+            done();
+          });
+          myEl._emit(null, { error: Error('fake-error') });
+        });
+        test('obtains error from payload.error {Object}', function(done) {
+          myEl.addEventListener('log', function _l(e) {
+            myEl.removeEventListener(e.type, _l);
+            done();
+          });
+          myEl._emit(null, { error: 'fake-error' });
+        });
+        test('if [prefix], adds "cells-generic-dp-" prefix to event', function(done) {
+          myEl.addEventListener('cells-generic-dp-log', function _l(e) {
+            myEl.removeEventListener(e.type, _l);
+            done();
+          });
+          myEl._emit(null, null, true);
+        });
+        test('with [verbose], calls console', function() {
+          var spy = sinon.spy(console, 'log');
+          myEl.set('verbose', true);
+          myEl._emit(null, {}, false);
+          expect(spy).to.have.been.called;
+          spy.restore();
+        });
+        test('with [verbose], calls console[method]', function() {
+          var spy = sinon.spy(console, 'info');
+          myEl.set('verbose', true);
+          myEl._emit('info', {}, false);
+          expect(spy).to.have.been.called;
+          spy.restore();
+        });
+        test('with [verbose], calls console.log in case [type] is not a console function', function() {
+          var spy = sinon.spy(console, 'log');
+          myEl.set('verbose', true);
+          myEl._emit('blabla', {}, false);
+          expect(spy).to.have.been.called;
+          spy.restore();
+        });
+        test('with [verbose] on false, does not call console', function() {
+          var spy = sinon.spy(console, 'log');
+          myEl.set('verbose', false);
+          myEl._emit(null, {}, false);
+          expect(spy).to.have.not.been.called;
+          spy.restore();
+        });
+        test('with [verbose] on false, does not call console[method]', function() {
+          var spy = sinon.spy(console, 'info');
+          myEl.set('verbose', false);
+          myEl._emit('info', {}, false);
+          expect(spy).to.have.not.been.called;
+          spy.restore();
+        });
+        test('with [verbose] on false, does not call console.log in case [type] is not a console function', function() {
+          var spy = sinon.spy(console, 'log');
+          myEl.set('verbose', false);
+          myEl._emit('blabla', {}, false);
+          expect(spy).to.have.not.been.called;
+          spy.restore();
+        });
+      });
+
+      suite('getLastResponse', function() {
+        test('by default returns null', function() {
+          expect(myEl.getLastResponse()).to.be.null;
+        });
+        test('returns [_lastResponse]', function() {
+          var fakeResponse = { key: 'value' };
+          myEl.set('_lastResponse', fakeResponse);
+          expect(myEl.getLastResponse()).to.be.deep.equal(fakeResponse);
+        });
+        test('returns [_lastError]', function() {
+          var lastError = { key: 'value' };
+          myEl.set('_lastError', lastError);
+          expect(myEl.getLastResponse()).to.be.deep.equal(lastError);
+        });
+      });
+
+      suite('getLastRequest', function() {
+        test('by default returns null', function() {
+          expect(myEl.getLastRequest()).to.be.null;
+        });
+        test('returns [_lastRequest] value', function() {
+          var fakeRequest = { xhr: 1234 };
+          myEl.set('_lastRequest', fakeRequest);
+          expect(myEl.getLastRequest()).to.be.equal(1234);
+        });
+      });
+
+      suite('generateRequest', function() {
+        test('if another request is pending, does nothing', function() {
+          var spy = sinon.spy(myEl.$[ 'cells-ajax' ], 'generateRequest');
+          myEl.set('_isLoading', true);
+          myEl.set('_lastRequest', {});
+          myEl.generateRequest();
+          expect(spy).not.to.have.been.called;
+          spy.restore();
+        });
+        test('works as expected', function() {
+          var spiers = [ '_mergeHeaders', '_parseBodyObject', '_emit' ].map(function(method) {
+            return sinon.spy(myEl, method);
+          });
+          spiers.push(sinon.spy(myEl.$[ 'cells-ajax' ], 'generateRequest'));
+          myEl.generateRequest();
+          spiers.forEach(function(spy) {
+            expect(spy).to.have.been.called;
+            spy.restore();
+          });
+        });
+      });
+
+      suite('_extractResponse', function() {
+        test('returns "undefined" if param {event} is not an Event', function() {
+          expect(myEl._extractResponse({})).to.be.undefined;
+        });
+        test('returns "value" key', function() {
+          var fakeEvent = new CustomEvent('fake-event', { detail: { value: '1234' } });
+          expect(myEl._extractResponse(fakeEvent)).to.be.equal('1234');
+        });
+        test('returns "xhr" response', function() {
+          var ajax = document.createElement('iron-ajax');
+          document.body.appendChild(ajax);
+          ajax.xhr = new XMLHttpRequest();
+          var fakeEvent = new CustomEvent('fake-event', { detail: ajax });
+          expect(myEl._extractResponse(fakeEvent)).not.to.be.undefined;
+          ajax.remove();
+        });
+        test('returns "xhr" response with complex event detail', function() {
+          var ajax = document.createElement('iron-ajax');
+          document.body.appendChild(ajax);
+          ajax.xhr = new XMLHttpRequest();
+          var fakeEvent = new CustomEvent('fake-event', {
+            detail: {
+              error: null,
+              response: ajax
+            }
+          });
+          expect(myEl._extractResponse(fakeEvent)).not.to.be.undefined;
+          ajax.remove();
+        });
+        test('returns HTMLElement if event detail is an HTMLElement but without {xhr} property', function() {
+          var ajax = document.createElement('DIV');
+          var fakeEvent = new CustomEvent('fake-event', { detail: ajax });
+          expect(myEl._extractResponse(fakeEvent)).not.to.be.undefined;
+        });
+        test('in other case, returns detail object', function() {
+          var fakeEvent = new CustomEvent('fake-event', { detail: '1234' });
+          expect(myEl._extractResponse(fakeEvent)).to.be.equal('1234');
+        });
+      });
+
+    });
+  </script>
+</body>
+
+</html>

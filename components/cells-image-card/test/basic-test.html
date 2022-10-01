@@ -1,0 +1,148 @@
+<!doctype html>
+
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <link rel="import" href="../cells-image-card.html">
+</head>
+<body>
+  <test-fixture id="default">
+    <template>
+      <cells-image-card heading="any" tags="any"></cells-image-card>
+    </template>
+  </test-fixture>
+  <test-fixture id="productCard">
+    <template>
+      <cells-image-card heading="any" product-card></cells-image-card>
+    </template>
+  </test-fixture>
+  <test-fixture id="headerInside">
+    <template>
+      <cells-image-card heading="any" header-inside-image></cells-image-card>
+    </template>
+  </test-fixture>
+  <test-fixture id="tagBottom">
+    <template>
+      <cells-image-card heading="any" tags-bottom-heading></cells-image-card>
+    </template>
+  </test-fixture>
+
+  <script>
+    isVisible = elem => !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length);
+
+    suite('<cells-image-card>', () => {
+      let el;
+
+      setup(() => {
+        el = fixture('default');
+      });
+      suite('Product card', () => {
+        test('By default the card is not a product card', () => {
+          const component = el.shadowRoot.querySelector('.card');
+
+          assert.isFalse(component.classList.contains('card-product'));
+          assert.isTrue(component.querySelector('.image-product').hidden);
+          assert.isFalse(component.querySelector('.image').hidden);
+        });
+
+        test('if has the "productCard" attribute the card should have the "card-product" class and the product image has to be visible', () => {
+          const productEl = fixture('productCard');
+          const componentPr = productEl.shadowRoot.querySelector('.card');
+
+          assert.isTrue(componentPr.classList.contains('card-product'));
+          assert.isFalse(componentPr.querySelector('.image-product').hidden);
+          assert.isTrue(componentPr.querySelector('.image').hidden);
+        });
+      });
+
+      suite('Header inside image', () => {
+        test('By default the header is outside the image', (done) => {
+          const component = el.shadowRoot.querySelector('#headerCard');
+          const spy = sinon.spy(el, 'updateStyles');
+
+          assert.isTrue(component.classList.contains('header'));
+          assert.isFalse(component.classList.contains('header-inside'));
+          done();
+          expect(spy).not.to.have.been.called();
+        });
+
+        test('If has the "headerInsideImage" attribute the header should have the "header-inside" class', (done) => {
+          const element = fixture('headerInside');
+          const spy = sinon.spy(element, 'updateStyles');
+          flush(() => {
+            const component = element.shadowRoot.querySelector('#headerCard');
+            assert.isFalse(component.classList.contains('header'));
+            assert.isTrue(component.classList.contains('header-inside'));
+            done();
+            expect(spy).to.have.been.called();
+          });
+        });
+      });
+      suite('Tag position', () => {
+        test('By default, tags are positioned before the heading', () => {
+          const component = el.shadowRoot.querySelector('.heading-tag');
+
+          assert.isFalse(component.classList.contains('heading-tag-bottom'));
+          assert.isFalse(component.hidden);
+        });
+        test('If has the "tagsBottomHeading" attribute, the tags are positioned after the heading with the "heading-tag-bottom" class', () => {
+          const element = fixture('tagBottom');
+          element.tags = 'any';
+          const component = element.shadowRoot.querySelector('.heading-tag');
+
+          assert.isTrue(component.classList.contains('heading-tag-bottom'));
+          assert.isFalse(component.hidden);
+        });
+        test('If there is no tags, the tag-container is hidden', () => {
+          const element = fixture('tagBottom');
+          const component = element.shadowRoot.querySelector('.heading-tag');
+
+          assert.isTrue(component.hidden);
+        });
+      });
+      suite('Subheading', () => {
+        test('By default subheading is not visible', () => {
+          const component = el.shadowRoot.querySelector('.subheading-text');
+
+          assert.isTrue(component.hidden);
+        });
+        test('If there is a subheading is visible', () => {
+          el.subheading = 'any';
+
+          const component = el.shadowRoot.querySelector('.subheading-text');
+          assert.isFalse(component.hidden);
+        });
+      });
+      suite('Links', () => {
+        test('By default there is no href in container link and bottom link is not visible', () => {
+          const component = el.shadowRoot.querySelector('.card');
+
+          assert.isNull(component.getAttribute('href'));
+          assert.isTrue(component.querySelector('.card-link').hidden);
+        });
+
+        test('If there are both link attributes, all the card is the link and the bottom link is visible', () => {
+          el.linkUrl = 'any';
+          el.linkText = 'any';
+
+          const component = el.shadowRoot.querySelector('.card');
+          assert.isNotNull(component.getAttribute('href'));
+          assert.isFalse(component.querySelector('.card-link').hidden);
+        });
+      });
+      suite('Function', () => {
+        test('On _dispatchEvent, new custom event is fired', () => {
+          sinon.spy(el, 'dispatchEvent')
+          el._linkClicked();
+          assert.equal(el.dispatchEvent.args[0][0].type, 'cells-image-card-link');
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

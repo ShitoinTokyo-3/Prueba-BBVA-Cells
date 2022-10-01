@@ -1,0 +1,112 @@
+{
+  "template": {
+    "tag": "cells-template-paper-drawer-panel",
+    "properties": {
+      "disableEdgeSwipe": true,
+      "headerFixed": true
+    }
+  },
+  "components": [
+    {
+      "zone": "app__header",
+      "type": "UI",
+      "familyPath": "../../components/cells-component-app-header",
+      "tag": "cells-component-app-header",
+      "properties": {
+        "text": "Evolutions Pokedex"
+      }
+    },
+    {
+      "zone": "app__main",
+      "type": "DM",
+      "familyPath": "../elements/pokemon-detail-dm",
+      "tag": "pokemon-detail-dm",
+      "properties": {
+      "cellsConnections": {
+          "in": {
+            
+          },
+          "out": {
+            "data-success-evolution-detail-dm":{
+              "bind":"data-success-pokemon"
+            }
+          },
+          "params": {
+            "idPokemon": "id"
+          }
+        }
+      }
+    },
+    {
+      "zone": "app__main",
+      "type": "DM",
+      "familyPath": "../elements/pokemon-evolutions-dm",
+      "tag": "pokemon-evolutions-dm",
+      "properties": {
+      "cellsConnections": {
+          "in": {
+            "data-success-evolution-detail-dm":{
+              "bind":"data"
+            }
+          },
+          "out": {
+            "data-success-evolution-dm":{
+              "bind":"data-success-evolutions"
+            }
+          }
+        }
+      }
+    },
+    {
+      "zone": "app__main",
+      "type":"DM",
+      "familyPath": "../elements/pokemon-dm",
+      "tag":"pokemon-dm",
+      "properties": {
+        "cellsConnections": {
+          "in": {
+            "data-success-evolution-dm": {
+              "bind": "data"
+            }
+          },
+          "out": {
+            "pokemon-success-evolutions": {
+              "bind": "pokemon-success-request"
+            }
+          }
+        }
+      }
+    },{
+      "zone": "app__main",
+      "type":"UI",
+      "familyPath": "../elements/pokemon-evolutions",
+      "tag":"pokemon-evolutions",
+      "properties": {
+        "cellsConnections": {
+          "in": {
+            "pokemon-success-evolutions": {
+              "bind": "getData"
+            }
+          },
+          "out": {
+            "detail-pokemon": {
+              "bind": "navigate-to-detail",
+              "link": {
+                "page": "another",
+                "params": {
+                  "idPokemon": "idPokemon"
+                }
+              }
+            },
+            "go_home": {
+              "bind": "navigate-to-home",
+              "link": {
+                "page": "login"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

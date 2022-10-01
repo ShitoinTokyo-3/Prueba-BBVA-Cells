@@ -1,0 +1,94 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes" name="viewport">
+  <title>Demo cells-component-app-header</title>
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+  <link rel="lazy-import" href="../../banking-icons/banking-icons.html">
+  <link rel="lazy-import" href="../../coronita-icons/coronita-icons.html">
+  <link rel="import" href="../../cells-demo-helper/cells-demo-helper.html">
+  <link rel="lazy-import" href="../cells-component-app-header.html">
+  <link rel="lazy-import" href="css/demo-styles.html">
+</head>
+
+<body unresolved ontouchstart style="margin: 0;">
+  <cells-demo-helper i18n locales-path="./locales" events='["left-button-pressed", "right-secondary-button-pressed", "right-button-pressed"]' available-themes='["cells-coronita-base-theme", "cells-banking-theme"]'>
+    <cells-demo-case heading="Header with menu and search button">
+     <template>
+      <cells-component-app-header
+        text="Hello John"
+        icon-left="menu"
+        icon-right="search">
+      </cells-component-app-header>
+     </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="Basic Header, only title">
+      <template>
+        <cells-component-app-header text="Hello John"></cells-component-app-header>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="Header with secondary style">
+      <template>
+        <cells-component-app-header class="secondary"
+          text="Legal conditions"
+          icon-left="close">
+        </cells-component-app-header>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="Header with content">
+      <template>
+        <cells-component-app-header icon-left="back">
+          <span slot="title">This is a content</span>
+        </cells-component-app-header>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="All buttons with custom icon IDs and default icon labels">
+      <template>
+        <cells-component-app-header
+          text="Global Position"
+          icon-back="banking:B37"
+          icon-menu="banking:B34"
+          icon-help="banking:D04"
+          icon-left="back"
+          icon-right="menu"
+          icon-right-secondary="help">
+        </cells-component-app-header>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="Custom icon IDs and icon labels">
+      <template>
+        <cells-component-app-header
+          text="My profile"
+          icon-left="coronita:settings"
+          icon-left-label="Settings"
+          icon-right="coronita:on"
+          icon-right-label="Logout">
+        </cells-component-app-header>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="Example with Bread Crumbs">
+      <template>
+        <cells-component-app-header
+          icon-left="back"
+          icon-left-label="Back"
+          icon-right="close"
+          icon-right-label="Close"
+          bread="Bread"
+          crumb="Crumb"
+          label-right="Cerrar"
+        >
+        </cells-component-app-header>
+      </template>
+    </cells-demo-case>
+  </cells-demo-helper>
+</body>
+</html>

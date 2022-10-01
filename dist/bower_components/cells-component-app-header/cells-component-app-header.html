@@ -1,0 +1,40 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../cells-heading/cells-heading.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../cells-i18n-behavior/cells-i18n-behavior.html">
+<link rel="import" href="cells-component-app-header-styles.html">
+
+
+<dom-module id="cells-component-app-header">
+  <template>
+    <style include="cells-component-app-header-styles cells-component-app-header-shared-styles"></style>
+    <div class="nav nav-left">
+      <button class$="btn btn-left btn-transparent [[_computeBtnLabel(bread)]]" on-click="_onButtonClick" data-event="left-button" hidden$="[[!_iconLeft]]">
+        <iron-icon icon="[[_iconLeft]]" class="icon-left" aria-label$="[[t(_iconLeftLabel)]]" style$="[[_iconStyle]]"></iron-icon>
+        <span class="bread" hidden$="[[!bread]]">
+          [[bread]]
+        </span>
+      </button>
+      <span class="btn-transparent crumb" hidden$="[[!crumb]]">
+        [[crumb]]
+      </span>
+    </div>
+    <cells-heading level="[[headingLevel]]" class="title">
+      <slot name="title">[[t(text)]]</slot>
+    </cells-heading>
+
+    <div class="nav nav-right">
+      <button class="btn btn-transparent btn-right-secondary" on-click="_onButtonClick" data-event="right-secondary-button" hidden$="[[!_iconRightSecondary]]">
+        <iron-icon icon="[[_iconRightSecondary]]" class="icon-right-secondary" aria-label$="[[t(_iconRightSecondaryLabel)]]" style$="[[_iconStyle]]"></iron-icon>
+      </button>
+      <button class$="btn btn-transparent btn-right [[_computeBtnLabel(bread)]]" on-click="_onButtonClick" data-event="right-button" hidden$="[[!_iconRight]]">
+        <iron-icon icon="[[_iconRight]]" class="icon-right" aria-label$="[[t(_iconRightLabel)]]" style$="[[_iconStyle]]"></iron-icon>
+        <span class="label-right" hidden$="[[!labelRight]]">
+            [[labelRight]]
+        </span>
+      </button>
+
+    </div>
+  </template>
+  <script src="cells-component-app-header.js"></script>
+</dom-module>

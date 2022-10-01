@@ -1,0 +1,57 @@
+@import "bower_components/cells-sass/main";
+
+:host {
+  box-sizing: border-box;
+  --cells-st-link-font-size: #{rem(15px)};
+  @apply --cells-st-link-host;
+}
+
+:host([hidden]), [hidden] {
+  display: none !important;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+/* Default links */
+
+:host ::slotted(*) {
+  font-family: var(--cells-fontDefault, sans-serif);
+  font-weight: var(--cells-st-link-font-weight, 700);
+  color: var(--cells-st-link-color, var(--bbva-medium-blue, #1973B8));
+  text-decoration: none;
+  font-size: var(--cells-st-link-font-size);
+
+  @apply --cells-st-link;
+}
+
+:host(.title) ::slotted(*) {
+  --cells-st-link-font-size: #{rem(16px)};
+}
+
+:host ::slotted(:hover) {
+  --cells-st-link-color: var(--cells-st-link-color-hover, var(--bbva-core-blue, #004481));
+
+  @apply --cells-st-link-hover;
+}
+
+:host ::slotted(:focus) {
+  --cells-st-link-color: var(--cells-st-link-color-focus, var(--bbva-core-blue, #004481));
+
+  @apply --cells-st-link-focus;
+}
+
+:host ::slotted(:active) {
+  --cells-st-link-color: var(--cells-st-link-color-active, var(--bbva-core-blue, #004481));
+
+  @apply --cells-st-link-active;
+}
+
+:host([disabled]) ::slotted(*) {
+  cursor: default;
+  --cells-st-link-color: var(--cells-st-link-color-disabled, var(--bbva-400, #bdbdbd));
+  opacity: .4;
+
+  @apply --cells-st-link-disabled;
+}

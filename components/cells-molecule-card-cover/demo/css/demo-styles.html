@@ -1,0 +1,30 @@
+<custom-style>
+  <style is="custom-style">
+    html, body {
+      height: 100%;
+      font-family: sans-serif;
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+    }
+
+    @media (max-width: 768px) {
+      *, *:before, *:after {
+        -webkit-tap-highlight-color: transparent;
+      }
+      .hidden-mobile {
+        display: none !important;
+      }
+    }
+
+    #iframeBody {
+      padding: 20px;
+      text-align: center;
+    }
+
+    #iframeBody button {
+      margin: 10px 0;
+    }
+  </style>
+</custom-style>

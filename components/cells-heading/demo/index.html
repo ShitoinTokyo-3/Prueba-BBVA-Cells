@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  <title>Demo cells-heading</title>
+
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+  <script>
+    window.I18nMsg = window.I18nMsg || {};
+    window.I18nMsg.disabled = true;
+  </script>
+
+  <link rel="import" href="../../cells-demo-helper/cells-demo-helper.html">
+  <link rel="lazy-import" href="../../iron-icon/iron-icon.html">
+  <link rel="lazy-import" href="../../iron-icons/iron-icons.html">
+  <link rel="lazy-import" href="../../iron-flex-layout/iron-flex-layout-classes.html">
+  <link rel="lazy-import" href="../cells-heading.html">
+  <link rel="lazy-import" href="css/demo-styles.html">
+</head>
+
+<body unresolved ontouchstart style="margin: 0;">
+  <cells-demo-helper resolution="tablet" available-themes='["cells-coronita-base-theme"]'>
+    <cells-demo-case heading="Heading levels (1 to 6)" description="The component can also be styled by using its level attribute.">
+      <template>
+        <custom-style>
+          <style include="iron-flex iron-flex-alignment">
+            .demo-item {
+              margin-bottom: 1.25rem;
+              align-items: baseline;
+            }
+
+            .demo-item .flex {
+              line-height: 1;
+              overflow: visible;
+            }
+
+            .label {
+              margin-right: .75rem;
+              color: #717780;
+              font-size: 0.625rem;
+              text-transform: uppercase;
+              padding-bottom: 1px;
+            }
+
+            cells-heading {
+              font-weight: 300;
+            }
+
+            [level="1"] {
+              font-size: var(--cells-text-size-xxxl, 2.5rem);
+            }
+
+            [level="2"] {
+              font-size: var(--cells-text-size-xxl, 2rem);
+            }
+
+            [level="3"] {
+              font-size: var(--cells-text-size-l, 1.5rem);
+            }
+
+            [level="4"] {
+              font-size: var(--cells-text-size-m, 1.25rem);
+            }
+
+            [level="5"] {
+              font-size: var(--cells-text-size-s, 1rem);
+            }
+
+            [level="6"] {
+              font-size: var(--cells-text-size-xxs, 0.75rem);
+            }
+          </style>
+        </custom-style>
+
+        <div class="demo-item layout horizontal">
+          <div class="label">level 1</div>
+          <div class="flex">
+            <cells-heading level="1">Heading level 1</cells-heading>
+          </div>
+        </div>
+
+        <div class="demo-item layout horizontal">
+          <div class="label">level 2</div>
+          <div class="flex">
+            <cells-heading level="2">Heading level 2</cells-heading>
+          </div>
+        </div>
+
+        <div class="demo-item layout horizontal">
+          <div class="label">level 3</div>
+          <div class="flex">
+            <cells-heading level="3">Heading level 3</cells-heading>
+          </div>
+        </div>
+
+        <div class="demo-item layout horizontal">
+          <div class="label">level 4</div>
+          <div class="flex">
+            <cells-heading level="4">Heading level 4</cells-heading>
+          </div>
+        </div>
+
+        <div class="demo-item layout horizontal">
+          <div class="label">level 5</div>
+          <div class="flex">
+            <cells-heading level="5">Heading level 5</cells-heading>
+          </div>
+        </div>
+
+        <div class="demo-item layout horizontal">
+          <div class="label">level 6</div>
+          <div class="flex">
+            <cells-heading level="6">Heading level 6</cells-heading>
+          </div>
+        </div>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="Default" description="By default the component has no styles and the value for `aria-level` attribute is set to 2. When the component has `aria-level`, it has the `heading` role as well.">
+      <template>
+        <cells-heading>Default heading without styles</cells-heading>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="Styled samples" description="The component can be styled using CSS classes that can be defined in the parent component or globally using a Polymer Style Module (shared style) in an application theme.">
+      <template>
+        <custom-style>
+          <style>
+            .application-heading {
+              font-size: 1.5rem;
+              margin-bottom: 0.31rem;
+            }
+
+            .section-heading {
+              font-size: 0.875rem;
+              text-transform: uppercase;
+            }
+          </style>
+        </custom-style>
+        <cells-heading class="application-heading">Application heading</cells-heading>
+        <cells-heading class="section-heading">Section heading</cells-heading>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="Custom content" description="Any HTML elements, like links, icons or buttons, can be used inside the tag.">
+      <template>
+        <custom-style>
+          <style>
+            .icon-heading span {
+              vertical-align: middle;
+            }
+          </style>
+        </custom-style>
+        <cells-heading class="icon-heading">
+          <iron-icon icon="icons:bookmark-border" aria-hidden="true"></iron-icon>
+          <span>Heading text</span>
+        </cells-heading>
+      </template>
+    </cells-demo-case>
+  </cells-demo-helper>
+</body>
+
+</html>

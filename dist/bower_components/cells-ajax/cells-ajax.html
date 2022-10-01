@@ -1,0 +1,15 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../polymer/lib/legacy/legacy-element-mixin.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../cells-http-native/cells-http-native.html">
+
+<dom-module id="cells-ajax">
+  <template>
+    <cells-http-native id="cellsHttpNative" url="[[url]]" params="[[params]]"  method="[[method]]" multipart="[[multipart]]" headers="[[headers]]" body="[[body]]" verbose="[[verbose]]" on-request="_onRequest" on-response="_onResponse" on-error="_onError"></cells-http-native>
+    <iron-ajax id="cellsHttp" url="[[url]]" timeout="[[timeout]]" params="[[params]]" method="[[method]]" headers="[[headers]]" content-type="[[contentType]]" body="[[body]]" sync="[[sync]]" handle-as="[[handleAs]]" with-credentials="[[withCredentials]]" verbose="[[verbose]]" debounce-duration="[[debounceDuration]]" reject-with-request="[[rejectWithRequest]]" on-request="_onRequest" on-response="_onResponse" on-error="_onError" auto="[[auto]]"></iron-ajax>
+    <iron-localstorage id="ironLocalStorage" errormessage="{{lastError}}" auto-save-disabled=""></iron-localstorage>
+  </template>
+</dom-module>
+
+<script src="cells-ajax.js"></script>

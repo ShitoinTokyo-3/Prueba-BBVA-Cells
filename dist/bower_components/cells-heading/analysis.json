@@ -1,0 +1,135 @@
+{
+  "schema_version": "1.0.0",
+  "elements": [
+    {
+      "description": "# cells-heading\n\n![Certificated](https://img.shields.io/badge/certificated-yes-brightgreen.svg)\n![Polymer 2.x](https://img.shields.io/badge/Polymer-2.x-green.svg)\n\n[Demo of component in Cells Catalog](https://catalogs.platform.bbva.com/cells)\n\n`<cells-heading>` provides heading semantics and an easy way to customize and unify heading styles used across a website or application.\n\n__Example:__\n```html\n<cells-heading class=\"custom-class\">Heading</cells-heading>\n```\n\n## Accessibility\n\nThe tag has a role heading applied by default, so it's not recommended to use headings (h1, h2, etc.) inside the tag.\n\n__Heading levels:__\n\nYou can provide information about the heading level relative to the document by setting the `level` attribute with a numeric value from 1 to 6. By default the heading level (`aria-level`) is set to 2. If 0 is provided, the component won't be treated as a heading.\n\n```html\n<cells-heading level=\"1\">Application heading</cells-heading>\n```\n\n## Styling\n\n`<cells-heading>` has no styles (only `display: block`), custom CSS properties or available mixins. You can customize it by creating a style module with ID `cells-heading-shared-styles` where you can define the styles that will be applied to the tag using your own custom classes.\n\nThe file with the style module must be imported in your application's theme.\n\nSample file imported in your theme: `my-theme/shared-styles.html`\n\n```html\n<link rel=\"import\" href=\"../polymer/polymer.html\">\n\n<dom-module id=\"cells-heading-shared-styles\">\n  <template>\n    <style>\n      :host {\n        font-family: var(--cells-fontDefault);\n      }\n      :host(.application-heading) {",
+      "summary": "Custom element with heading semantics that allows to configure the heading level.",
+      "path": "cells-heading/cells-heading.js",
+      "properties": [
+        {
+          "name": "level",
+          "type": "number | null | undefined",
+          "description": "Allows to define an aria-level for the main header text.\nIf 0 is provided, the header text won't be treated as a heading.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 77,
+              "column": 6
+            },
+            "end": {
+              "line": 82,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "observer": "\"_levelChanged\"",
+              "attributeType": "Number"
+            }
+          },
+          "defaultValue": "2"
+        }
+      ],
+      "methods": [
+        {
+          "name": "connectedCallback",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 86,
+              "column": 2
+            },
+            "end": {
+              "line": 89,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_levelChanged",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 91,
+              "column": 2
+            },
+            "end": {
+              "line": 99,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "level"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        }
+      ],
+      "staticMethods": [],
+      "demos": [
+        {
+          "url": "demo/index.html",
+          "description": ""
+        }
+      ],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 66,
+          "column": 0
+        },
+        "end": {
+          "line": 100,
+          "column": 1
+        }
+      },
+      "privacy": "public",
+      "superclass": "Polymer.Element",
+      "name": "cellsHeading",
+      "attributes": [
+        {
+          "name": "level",
+          "description": "Allows to define an aria-level for the main header text.\nIf 0 is provided, the header text won't be treated as a heading.",
+          "sourceRange": {
+            "start": {
+              "line": 77,
+              "column": 6
+            },
+            "end": {
+              "line": 82,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "number | null | undefined"
+        }
+      ],
+      "events": [
+        {
+          "type": "CustomEvent",
+          "name": "level-changed",
+          "description": "Fired when the `level` property changes.",
+          "metadata": {}
+        }
+      ],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "cells-heading"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "name": "cells-http-native",
+  "version": "13.0.0",
+  "authors": [
+    "The Cells Authors"
+  ],
+  "description": "Web Component that encapsulate a native plugin for communicating with HTTP servers. Allows for SSL pinning!.",
+  "keywords": [
+    "web-component",
+    "polymer",
+    "http",
+    "ssl-pinning"
+  ],
+  "main": "cells-http-native.html",
+  "dependencies": {
+    "iron-ajax": "^2.0.0",
+    "polymer": "^2.0.0"
+  },
+  "devDependencies": {
+    "webcomponentsjs": "^1.0.0",
+    "web-component-tester": "^6.5.0"
+  }
+}

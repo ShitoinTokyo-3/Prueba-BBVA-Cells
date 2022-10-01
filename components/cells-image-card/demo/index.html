@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="es-ES">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
+  <title>Demo cells-image-card</title>
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+  <link rel="import" href="../../cells-demo-helper/cells-demo-helper.html">
+  <link rel="lazy-import" href="../../coronita-icons/coronita-icons.html">
+  <link rel="lazy-import" href="../../iron-icon/iron-icon.html">
+  <link rel="lazy-import" href="../cells-image-card.html">
+  <link rel="lazy-import" href="css/demo-style.html">
+</head>
+
+<body unresolved ontouchstart style="margin: 0;">
+
+  <cells-demo-helper available-themes='["cells-coronita-base-theme"]' resolution="mobile" events='["cells-image-card-link"]'>
+    <cells-demo-case heading="Default" description="Only link available">
+      <template>
+        <div class="container-card">
+          <cells-image-card
+            heading="Beyond Ties and Coffee Mugs..."
+            alt="Beyond Ties and Coffee Mugs..."
+            image-url="http://via.placeholder.com/350x150"
+            link-text="Learn more"
+          >
+            <div slot="card-content">
+              Want to make your dad feel loved this Father's Day? Avoid purchasing the traditional necktie or boring coffee.
+            </div>
+          </cells-image-card>
+        </div>
+      </template>
+    </cells-demo-case>
+    <cells-demo-case heading="With default image" description="Use default-image-url to display a default image as placeholder of the main image">
+      <template>
+        <div class="container-card">
+          <cells-image-card
+            heading="Beyond Ties and Coffee Mugs..."
+            alt="Beyond Ties and Coffee Mugs..."
+            default-image-url="http://via.placeholder.com/350x150"
+            image-url="error-url"
+            link-text="Learn more"
+          >
+            <div slot="card-content">
+              Want to make your dad feel loved this Father's Day? Avoid purchasing the traditional necktie or boring coffee.
+            </div>
+          </cells-image-card>
+        </div>
+      </template>
+    </cells-demo-case>
+    <cells-demo-case heading="With link-url" description="Use header-inside-image attribute to display the title over the image.">
+      <template>
+        <div class="container-card">
+          <cells-image-card
+            header-inside-image
+            heading="Beyond Ties and Coffee Mugs..."
+            alt="Beyond Ties and Coffee Mugs..."
+            image-url="http://via.placeholder.com/350x150"
+            tags="Travel"
+            link-text="Learn more"
+            link-url="http://example.com"
+          >
+            <div slot="card-content">
+              Want to make your dad feel loved this Father's Day? Avoid purchasing the traditional necktie or boring coffee.
+            </div>
+          </cells-image-card>
+        </div>
+      </template>
+    </cells-demo-case>
+    <cells-demo-case heading="Heading outside image" description="Default structure if the heading is outside the image">
+      <template>
+        <div class="container-card">
+          <cells-image-card
+            heading="Build My Savings"
+            alt="Build My Savings"
+            image-url="http://via.placeholder.com/350x150"
+            tags="Network"
+            link-text="Learn more"
+            link-url="http://example.com"
+          >
+            <div slot="card-content">
+              <div>
+                <p>Build an account that makes saving easy for you, and then rewards you for sticking to your plan.</p>
+              </div>
+            </div>
+          </cells-image-card>
+        </div>
+      </template>
+    </cells-demo-case>
+    <cells-demo-case heading="Heading outside with subtitle" description="With content, subheading and tag below heading.">
+      <template>
+        <div class="container-card">
+          <cells-image-card
+            heading="Build My Savings"
+            subheading="Build My Savings build My Savings build My Savings"
+            alt="Build My Savings"
+            image-url="http://via.placeholder.com/350x150"
+            tags="Network"
+            tags-bottom-heading
+          >
+            <div slot="card-content">
+              <div>
+                <p>Build an account that makes saving easy for you, and then rewards you for sticking to your plan.</p>
+              </div>
+            </div>
+          </cells-image-card>
+          </div>
+      </template>
+    </cells-demo-case>
+    <cells-demo-case heading="Row layout" description="The component is responsive, if it's resized down of 768px, the component adjust the image in column type. Use 'row' class if you want row position of image and content.">
+      <template>
+        <div class="container-card">
+          <cells-image-card
+            class="row"
+            heading="Smart mom, Rich Mom: Build..."
+            heading-level="2"
+            tags="Credit management"
+            subheading="Enjoy maximum convenience and earn interest on your balance"
+            image-url="http://via.placeholder.com/200x200"
+            alt="Credit management"
+            link-text="Learn more"
+            link-url="http://example.com"
+          >
+            <div slot="card-content">
+              There's a massive disconnect between the financial services...
+            </div>
+          </cells-image-card>
+        </div>
+      </template>
+    </cells-demo-case>
+    <cells-demo-case heading="Product card" description="The component belongs to product card type. The styles depends on the resolution">
+        <template>
+          <div class="container-card">
+            <cells-image-card
+              product-card
+              heading="Beyond Ties and Coffee Mugs..."
+              alt="Beyond Ties and Coffee Mugs..."
+              image-url="https://openapi.bbva.com/ccds/covers?&amp;default_image=true&amp;v=4&amp;country=es&amp;app_id=com.bbva.buzz&amp;pg=0000003514"
+              link-text="Learn more"
+              link-url="http://example.com"
+            >
+              <div slot="card-content">
+                Want to make your dad feel loved this Father's Day? Avoid purchasing the traditional necktie or boring coffee.
+              </div>
+            </cells-image-card>
+          </div>
+        </template>
+      </cells-demo-case>
+    <cells-demo-case heading="Iframe video" description="With a video inside an iframe and no link. For example, youtube or vimeo videos">
+      <template>
+        <style>
+          iframe {
+            border:none;
+            height: 300px;
+            width: 100%;
+          }
+        </style>
+        <div class="container-card">
+          <cells-image-card
+            heading="Beyond Ties and Coffee Mugs..."
+          >
+            <div slot="image-content">
+              <iframe src="https://www.youtube.com/embed/PCwL3-hkKrg"></iframe>
+            </div>
+            <div slot="card-content">
+              <p>Want to make your dad feel loved this Father's Day? Avoid purchasing the traditional necktie or boring coffee.</p>
+            </div>
+          </cells-image-card>
+        </div>
+      </template>
+    </cells-demo-case>
+    <cells-demo-case heading="Video tag" description="With a video tag and without iframe">
+      <template>
+        <style>
+          video {
+            width: 100%;
+          }
+        </style>
+        <div class="container-card">
+          <cells-image-card
+            heading="Beyond Ties and Coffee Mugs..."
+          >
+            <div slot="image-content">
+              <video controls>
+                <source src="http://techslides.com/demos/sample-videos/small.webm" type="video/webm">
+                <source src="http://techslides.com/demos/sample-videos/small.ogv" type="video/ogg">
+                <source src="http://techslides.com/demos/sample-videos/small.mp4" type="video/mp4">
+                <source src="http://techslides.com/demos/sample-videos/small.3gp" type="video/3gp">
+              </video>
+            </div>
+            <div slot="card-content">
+              <p>Want to make your dad feel loved this Father's Day? Avoid purchasing the traditional necktie or boring coffee.</p>
+            </div>
+          </cells-image-card>
+        </div>
+      </template>
+    </cells-demo-case>
+    <cells-demo-case heading="Content centered for modal" description="display data for modal">
+      <template>
+        <div class="container-card">
+          <cells-image-card
+            heading="Build My Savings"
+            alt="Build My Savings"
+            image-url="http://via.placeholder.com/350x150"
+            card-class="modal-card">
+            <div slot="card-content">
+              <div>
+                <p>Build an account that makes saving easy for you, and then rewards you for sticking to your plan.</p>
+              </div>
+            </div>
+          </cells-image-card>
+        </div>
+      </template>
+    </cells-demo-case>
+  </cells-demo-helper>
+</body>
+
+</html>

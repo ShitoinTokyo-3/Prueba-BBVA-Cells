@@ -1,0 +1,164 @@
+@import "bower_components/cells-sass/main";
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  min-height: var(--cells-component-app-header-height, rem(60px));
+  background-color: var(--cells-component-app-header-bg-color, var(--bbva-navy, #072146));
+  color:var(--cells-component-app-header-color, #fff);
+  font-family: var(--cells-fontDefault, sans-serif);
+  @apply --cells-component-app-header;
+
+  &:after {
+    content: "";
+    display: none;
+    @apply --cells-component-app-header-after;
+  }
+}
+
+:host([hidden]), [hidden] { display: none !important; }
+
+/**
+ * Empty mixins to set outline for :focus and :active states.
+ * These mixins are meant to be set in an application's theme.
+ * --cells-global-focus, --cells-global-active
+ */
+@each $state in ('focus', 'active') {
+  *:#{$state} {
+    @apply --cells-global-#{$state};
+  }
+}
+
+button:active { @apply --cells-global-active; }
+
+/**
+ * Secondary style with white background and blue icons and text by default.
+ */
+:host(.secondary) {
+  background-color: var(--cells-component-app-header-secondary-bg-color, #fff);
+  color: var(--cells-component-app-header-secondary-color, var(--bbva-navy, #072146));
+  height: var(--cells-component-app-header-secondary-height, rem(60px));
+  @apply --cells-component-app-header-secondary;
+
+  &:after {
+    content: "";
+    display: block;
+    @apply --cells-component-app-header-secondary-after;
+  }
+
+  .title {
+    @apply --cells-component-app-header-secondary-title;
+  }
+
+  .btn {
+    color: var(--cells-component-app-header-secondary-btn-color, var(--bbva-navy, #072146));
+    @apply --cells-component-app-header-secondary-btn;
+  }
+}
+
+/**
+ * Button wrappers
+ */
+.nav {
+  display: flex;
+  align-items: center;
+  min-width: var(--cells-component-app-header-btn-size, rem(50px));
+  @apply --cells-component-app-header-nav;
+
+  &-left {
+    margin-right: auto;
+    @apply --cells-component-app-header-navleft;
+  }
+
+  &-right {
+    margin-left: auto;
+    text-align: right;
+    white-space: nowrap;
+    @apply --cells-component-app-header-navright;
+  }
+}
+
+.title {
+  text-align: center;
+  font-weight: normal;
+  font-size: rem(18px);
+  @apply --cells-component-app-header-title;
+}
+
+/**
+ * Icons
+ */
+.icon-left {
+  @apply --cells-component-app-header-left-icon;
+}
+.icon-right  {
+  @apply --cells-component-app-header-right-icon;
+}
+.icon-right-secondary  {
+  @apply --cells-component-app-header-right-secondary-icon;
+}
+
+/**
+ * Buttons
+ */
+.btn {
+  min-width: var(--cells-component-app-header-btn-size, rem(50px));
+  min-height: var(--cells-component-app-header-btn-size, rem(50px));
+  color: var(--cells-component-app-header-btn-color, #fff);
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @apply --cells-component-app-header-btn;
+}
+
+.btn-transparent {
+  background-color: transparent;
+  border: 0;
+}
+
+.btn-right-secondary {
+  min-width: var(--cells-component-app-header-btn-right-secondary-width, rem(25px));
+}
+
+.btn-with-label {
+  padding: 0 1rem;
+  @apply --cells-component-app-header-btn-with-label;
+}
+
+/*
+* Breadcrumb
+*/
+.crumb {
+  color: var(--cells-component-app-header-crumb-color, #fff);
+  font-size: rem(16px);
+  &::before {
+    content: '•';
+    padding-right: 0.7rem;
+    @apply --cells-component-app-header-crumb-attribute-before;
+  }
+  @apply --cells-component-app-header-crumb;
+}
+
+
+.bread {
+  color: var(--cells-component-app-header-bread-color, #fff);
+  font-size: rem(16px);
+  padding-left: 0.5rem;
+  @apply --cells-component-app-header-bread;
+}
+
+/*
+* Label nav right
+*/
+
+.label-right {
+  color: var(--cells-component-app-header-label-right-color, #fff);
+  padding-left: 0.5rem;
+  font-size: rem(16px);
+  @apply --cells-component-app-header-label-right;
+}
+

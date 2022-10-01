@@ -1,0 +1,34 @@
+{
+  "name": "cells-image-card",
+  "version": "12.5.1",
+  "description": "Component that shows a card with an image with a row or column layout.",
+  "keywords": [
+    "card",
+    "image",
+    "a11y"
+  ],
+  "ignore": [],
+  "dependencies": {
+    "polymer": "^2.0.0",
+    "cells-heading": "^12.0.0",
+    "cells-st-link": "^12.0.0",
+    "cells-molecule-card-cover": "^12.0.0",
+    "iron-image": "PolymerElements/iron-image#^2.0.0"
+  },
+  "devDependencies": {
+    "cells-coronita-base-theme": "^12.0.0",
+    "cells-demo-helper": "^12.0.0",
+    "cells-sass": "^2.0.0",
+    "coronita-icons": "^12.0.0",
+    "web-component-tester": "^6.0.0",
+    "webcomponentsjs": "^1.0.0"
+  },
+  "main": [
+    "cells-image-card.html"
+  ],
+  "_source": "art://bgcm/cells-image-card",
+  "_target": "^12.5.1",
+  "_release": "12.5.1",
+  "_originalSource": "cells-image-card",
+  "_direct": true
+}

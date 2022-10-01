@@ -1,0 +1,39 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../cells-heading/cells-heading.html">
+<link rel="import" href="../cells-st-link/cells-st-link.html">
+<link rel="import" href="../cells-molecule-card-cover/cells-molecule-card-cover.html">
+<link rel="import" href="../iron-image/iron-image.html">
+<link rel="import" href="cells-image-card-styles.html">
+
+<dom-module id="cells-image-card">
+  <template>
+    <style include="cells-image-card-styles cells-image-card-shared-styles"></style>
+    <a class$="[[cardClass]] [[_getCardClass(productCard)]]" href="[[linkUrl]]" aria-labelledby="[[heading]]">
+      <div class="card-media">
+        <slot name="image-content">
+          <div class="image" hidden$="[[productCard]]">
+            <iron-image preload id="imageImg" class="image-img" placeholder="{{defaultImageUrl}}" src="{{imageUrl}}" sizing="[[imgSizing]]"></iron-image>
+          </div>
+          <cells-molecule-card-cover class="image-product" hidden$="[[!productCard]]" alt="[[alt]]" image-src="{{imageUrl}}">
+          </cells-molecule-card-cover>
+        </slot>
+      </div>
+      <div class="card-body">
+        <div class$="[[_getHeadingClass(headerInsideImage)]]" role="banner" id="headerCard">
+          <div hidden$="[[!tags]]" class$="heading-tag [[_getTagPosition(tagsBottomHeading)]]">[[tags]]</div>
+          <cells-heading hidden$="[[!heading]]" class="heading-text" level="[[headingLevel]]">[[heading]]</cells-heading>
+          <div hidden$="[[!subheading]]" class="subheading-text">[[subheading]]</div>
+        </div>
+        <div class="card-content">
+          <slot name="card-content"></slot>
+        </div>
+        <div hidden$="[[!linkText]]" class="card-link">
+          <cells-st-link>
+            <span on-click="_linkClicked">[[linkText]]</span>
+          </cells-st-link>
+        </div>
+      </div>
+    </a>
+  </template>
+  <script src="cells-image-card.js"></script>
+</dom-module>

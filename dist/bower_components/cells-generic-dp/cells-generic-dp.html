@@ -1,0 +1,21 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../cells-ajax/cells-ajax.html">
+<link rel="import" href="./object-assign-polyfill.html">
+
+<dom-module id="cells-generic-dp">
+  <template>
+    <custom-style>
+      <style>
+        :host {
+          display: none;
+        }
+      </style>
+    </custom-style>
+    <cells-ajax id="cells-ajax" url="[[_url]]" method="[[method]]" params="[[params]]" multipart="[[multipart]]" headers="[[headers]]" body="[[body]]"
+      verbose="[[verbose]]" native="[[native]]" cache="[[cache]]" cache-time="[[cacheTime]]" content-type="[[contentType]]"
+      sync="[[sync]]" handle-as="[[handleAs]]" with-credentials="[[withCredentials]]" timeout="[[timeout]]" auto="[[auto]]"
+      loading="{{_isLoading}}" last-request="{{_lastRequest}}" on-response="_lastResponseChanged" on-error="_lastErrorChanged">
+    </cells-ajax>
+  </template>
+  <script src="cells-generic-dp.js"></script>
+</dom-module>

@@ -1,0 +1,117 @@
+{
+  "schema_version": "1.0.0",
+  "elements": [
+    {
+      "description": "`<cells-atom-icon>` is an element that wraps iron-icon and adds sizing classes to set the icon width and height.\n\n Example:\n\n```html\n<cells-atom-icon icon=\"banking:A01\" class=\"icon-size-24\"></cells-atom-icon>\n```\nUse a class `icon-size-<size>` to set the width and height of the icon. Available sizes goes from 8 to 64px (only even numbers).\n\nIf you need an icon size that is not covered using a class, set the size using `--cells-atom-icon-size` custom property.\n\nThe icon color can be set using the color property.\n\nExample:\n\n```html\n<style is=\"custom-style\">\n.custom-size {\n    --cells-atom-icon-size: 50px;\n  }\n  </style>\n  ```\n\n  If you need to add iron-icon specific styles you can set them using `--cells-atom-icon-iron-icon` custom property.\n\n  Example:\n\n  ```html\n  <style is=\"custom-style\">\n  cells-atom-icon {\n      --cells-atom-icon-size: 3rem;\n      --cells-atom-icon-iron-icon: {\n          left: 2rem;\n        }\n    }\n    </style>\n  ```\n\n  ## Styling\n\n  The following custom properties and mixins are available for styling:\n\n  | Custom property | Description     | Default        |\n  |:----------------|:----------------| :--------------|\n  | --cells-atom-icon           | icon mixin                       | {}          |\n  | --cells-atom-icon-size      | icon size (width and height)     | 1rem (16px) |\n  | --cells-atom-icon-iron-icon | inner iron icon                  | {}          |\n  | --cells-atom-icon-iron-disabled | disabled color of the icon   | #BDBDBD     |",
+      "summary": "",
+      "path": "cells-atom-icon.js",
+      "properties": [
+        {
+          "name": "icon",
+          "type": "string | null | undefined",
+          "description": "The name of the icon to use. The name should be of the form:\n`iconset_name:icon_name`.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 67,
+              "column": 6
+            },
+            "end": {
+              "line": 67,
+              "column": 28
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "src",
+          "type": "string | null | undefined",
+          "description": "If using iron-icon without an iconset, you can set the src to be\nthe URL of an individual icon image file. Note that this will take\nprecedence over a given icon attribute.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 73,
+              "column": 6
+            },
+            "end": {
+              "line": 73,
+              "column": 27
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          }
+        }
+      ],
+      "methods": [],
+      "staticMethods": [],
+      "demos": [
+        {
+          "url": "demo/index.html",
+          "description": ""
+        }
+      ],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 56,
+          "column": 0
+        },
+        "end": {
+          "line": 76,
+          "column": 1
+        }
+      },
+      "privacy": "public",
+      "superclass": "Polymer.Element",
+      "name": "CellsAtomIcon",
+      "attributes": [
+        {
+          "name": "icon",
+          "description": "The name of the icon to use. The name should be of the form:\n`iconset_name:icon_name`.",
+          "sourceRange": {
+            "start": {
+              "line": 67,
+              "column": 6
+            },
+            "end": {
+              "line": 67,
+              "column": 28
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "src",
+          "description": "If using iron-icon without an iconset, you can set the src to be\nthe URL of an individual icon image file. Note that this will take\nprecedence over a given icon attribute.",
+          "sourceRange": {
+            "start": {
+              "line": 73,
+              "column": 6
+            },
+            "end": {
+              "line": 73,
+              "column": 27
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        }
+      ],
+      "events": [],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "cells-atom-icon"
+    }
+  ]
+}

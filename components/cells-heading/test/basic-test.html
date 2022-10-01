@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+
+  <link rel="import" href="../cells-heading.html">
+</head>
+
+<body>
+
+  <test-fixture id="default">
+    <template>
+      <cells-heading>Heading</cells-heading>
+    </template>
+  </test-fixture>
+
+  <script>
+    suite('<cells-heading>', function() {
+      var el;
+
+      setup(function() {
+        el = fixture('default');
+      });
+
+      test('has aria-level role by default', function() {
+        assert.isTrue(el.hasAttribute('aria-level'));
+      });
+
+      test('has role attribute set to heading by default', function() {
+        assert.equal(el.getAttribute('role'), 'heading');
+      });
+
+      test('setting a valid value for level attribute sets that value as aria-level attribute', function() {
+        el.level = 1;
+        assert.equal(el.getAttribute('aria-level'), String(el.level));
+      });
+
+      test('setting 0 as value for level attribute removes aria-level and role attributes', function() {
+        el.level = 0;
+        assert.isFalse(el.hasAttribute('aria-level'));
+        assert.isFalse(el.hasAttribute('role'));
+      });
+    });
+  </script>
+</body>
+
+</html>

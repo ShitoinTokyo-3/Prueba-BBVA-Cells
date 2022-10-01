@@ -1,0 +1,71 @@
+<!doctype html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+    <link rel="import" href="../cells-molecule-card-cover.html">
+  </head>
+  <body>
+
+    <test-fixture id="card1">
+      <template>
+        <cells-molecule-card-cover
+          width="156"
+          height="98">
+        </cells-molecule-card-cover>
+      </template>
+    </test-fixture>
+
+    <script>
+
+      suite('<cells-molecule-card-cover>', function() {
+        let card1;
+
+        setup(function() {
+          card1 = fixture('card1');
+        });
+
+        suite('Error on loading image', function() {
+          test('should show defaultImage image if there is an error loading imageSrc', function() {
+            let image = card1.shadowRoot.querySelector('iron-image');
+            card1.defaultImage = 'https://openapi.bbva.com/ccds/covers?&default_image=true&v=4&country=es&app_id=com.bbva.buzz&pg=0000003514';
+            card1.imageSrc = 'fakepath.png';
+            image.addEventListener('error-changed', function() {
+              assert.equal(card1.imageSrc, card1.defaultImage);
+            });
+          });
+        });
+
+        suite('setting status', function() {
+          test('should add status class to overlay', function() {
+            let layer = card1.shadowRoot.querySelector('#iconTextContainer');
+            card1.status = 'locked';
+            assert.isTrue(layer.classList.contains('locked'));
+          });
+          test('and changing it again should remove previous status class from overlay', function() {
+            let layer = card1.shadowRoot.querySelector('#iconTextContainer');
+            card1.status = 'locked';
+            assert.isTrue(layer.classList.contains('locked'));
+            card1.status = 'activate';
+            assert.isFalse(layer.classList.contains('locked'));
+          });
+          test('Other test', () => {
+            let image = card1.shadowRoot.querySelector('iron-image');
+            image.error = 'Error';
+            card1.defaultImage = 'https://openapi.bbva.com/ccds/covers?&default_image=true&v=4&country=es&app_id=com.bbva.buzz&pg=0000003514';
+            card1.imageSrc = 'fakepath.png';
+            card1._imageError = null;
+            card1._imageError = 'Error';
+            assert.equal(card1.imageSrc, card1.defaultImage);
+          });
+        });
+
+      });
+
+    </script>
+  </body>
+</html>

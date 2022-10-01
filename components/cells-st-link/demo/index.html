@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es-ES">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+  <title>Demo cells-st-link</title>
+  <script>
+    window.Polymer = { dom: 'shadow', lazyRegister: true, useNativeCSSProperties: true };
+  </script>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="../../cells-demo-helper/cells-demo-helper.html">
+  <link rel="lazy-import" href="../cells-st-link.html">
+  <link rel="lazy-import" href="css/demo-styles.html">
+
+</head>
+
+<body unresolved style="margin: 0;">
+  <cells-demo-helper available-themes='["cells-coronita-base-theme", "cells-banking-theme"]'
+    resolution="mobile"
+    breakpoints='{
+        "mobile": { "width": 360, "height": 480, "name": "Mobile" },
+        "tablet": { "width": 768, "height": 480, "name": "Tablet" }
+      }'>
+    <cells-demo-case heading="Default link">
+      <template>
+        <p>
+          This is a
+          <cells-st-link>
+            <a href="#">normal link</a>
+          </cells-st-link>
+        </p>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="Custom link">
+      <template>
+        <custom-style>
+          <style>
+            html {
+              --cells-st-link-focus: {
+                padding: 0 0.575em;
+                outline:  1px solid  #1973B8;
+              }
+            }
+          </style>
+        </custom-style>
+        <p>
+          This is a
+          <cells-st-link>
+            <a href="#" tabindex="0">custom link</a>
+          </cells-st-link>
+        </p>
+      </template>
+    </cells-demo-case>
+
+    <cells-demo-case heading="Disabled link">
+      <template>
+        <custom-style>
+          <style>
+            html {
+              --cells-st-link-focus: {
+                padding: 0 0.575em;
+                outline:  1px solid  #1973B8;
+              }
+            }
+          </style>
+        </custom-style>
+        <p>
+          This is a
+          <cells-st-link disabled>
+            <a href="#" tabindex="0">disabled link</a>
+          </cells-st-link>
+        </p>
+      </template>
+    </cells-demo-case>
+  </cells-demo-helper>
+</body>
+
+</html>

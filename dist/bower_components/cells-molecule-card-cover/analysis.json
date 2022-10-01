@@ -1,0 +1,817 @@
+{
+  "schema_version": "1.0.0",
+  "elements": [
+    {
+      "description": "# cells-molecule-card-cover\n\n![Certificated](https://img.shields.io/badge/certificated-yes-brightgreen.svg)\n![Polymer 2.x](https://img.shields.io/badge/Polymer-2.x-green.svg)\n\n[Demo of component in Cells Catalog](https://catalogs.platform.bbva.com/cells)\n\nAn image with an optional overlay and icon to cover it.\n\nExpects one mandatory attribute:\n- **image-src**: Url of the cover image.\n\nYou can also use the attribute `default-image` to set a default/fallback image in case the one set with `image-src` fails to load.\n\nUse the `alt` attribute to set the alt text of the image.\n\n```html\n<cells-molecule-card-cover image-src=\"path/to/image.png\" alt=\"Image alt text\"></cells-molecule-card-cover>\n```\n\n```html\n<cells-molecule-card-cover image-src=\"path/to/image.png\" alt=\"Image alt text\" default-image=\"path/to/fallback-image.png\"></cells-molecule-card-cover>\n```\n\n## Custom size\n\nUse the `width` and `height` attributes to define a custom size for the image. Setting just one of them will preserve the aspect ratio of the image.\n\n```html\n<cells-molecule-card-cover\nimage-src=\"path/to/image.png\"\nalt=\"Image alt text\"\nwidth=\"200\">\n</cells-molecule-card-cover>\n```\n\n```html\n<cells-molecule-card-cover\nimage-src=\"path/to/image.png\"\nalt=\"Image alt text\"\nheight=\"120\">\n</cells-molecule-card-cover>\n```\n\n## Overlay and icon\n\nUsing the `show-overlay`, `icon` and `text` attributes, you can show a layer over the image with an icon and/or text centered on it. The icon size can be changed with the `icon-size` attribute.\n\n```html\n<cells-molecule-card-cover\nimage-src=\"path/to/image.png\"\nalt=\"Image alt text\"\nwidth=\"200\"\nheight=\"150\"\nshow-overlay>\n</cells-molecule-card-cover>\n```\n\n```html\n<cells-molecule-card-cover\nimage-src=\"path/to/image.png\"\nalt=\"Image alt text\"\nwidth=\"200\"\nheight=\"150\"\nshow-overlay\nicon=\"coronita:block\"\nicon-size=\"36\"\ntext=\"Lorem ipsum\">\n</cells-molecule-card-cover>\n```\n\n## Preload, placeholder and fade\n\nAs in `iron-image`, you can use `preload` attribute to show a placeholder image or placeholder styles (using the mixin `cells-molecule-card-cover-iron-image-placeholder`) while the image is still loading. Use `placeholder` attribute to set the path to the placeholder image, and the `fade` attribute if you want a fade-in effect when the image loads.\n\n```html\n<cells-molecule-card-cover\nimage-src=\"path/to/image.png\"\nalt=\"Image alt text\"\nwidth=\"200\"\nheight=\"150\"\npreload\nfade\nplaceholder=\"path/to/placeholder-image.png\">\n</cells-molecule-card-cover>\n```\n\n## Status\n\nUse the `status` attribute to set one of predefined status to the card. Default available status are `locked`, `activate` and `off`. Using a status will automatically show the overlay on the card.\n\n```html\n<cells-molecule-card-cover\nstatus=\"locked\"\nicon=\"coronita:block\"\ntext=\"Locked\"\nimage-src=\"path/to/image.png\"\nwidth=\"200\"\nheight=\"150\"\nalt=\"Image alt text\">\n</cells-molecule-card-cover>\n```\n\n## Icons\n\nSince this component uses icons, it will need an [iconset](https://bbva.cellsjs.com/guides/best-practices/cells-icons.html) in your project as an [application level dependency](https://bbva.cellsjs.com/guides/advanced-guides/application-level-dependencies.html). In fact, this component uses an iconset in its demo.\n\n## Styling\n\nThe following custom properties and mixins are available for styling:\n\n| Custom property                                             | Description                                                 | Default     |\n|:-----------------------------------------------------------:|:-----------------------------------------------------------:|:-----------:|\n| --cells-molecule-card-cover                                 | Empty mixin for component                                   | {}          |\n| --cells-molecule-card-cover-angled-overlay-before           | Empty mixin for overlay in :host([angled-overlay]):before   | {}          |\n| --cells-molecule-card-cover-angled-overlay                  | Empty mixin for overlay in :host([angled-overlay])          | {}          |\n| --cells-molecule-card-cover-img-fluid                       | Empty mixin applied to iron-image in :host([fluid])         | {}          |\n| --cells-molecule-card-cover-iron-image-width                | Image width                                                 | 100%        |\n| --cells-molecule-card-cover-iron-image-height               | Image height                                                | auto        |\n| --cells-molecule-card-cover-iron-image-placeholder          | Empty mixin for image style placeholder                     | {}          |\n| --cells-molecule-card-cover-img                             | Empty mixin for image                                       | {}          |\n| --cells-molecule-card-cover-icon-color                      | Color for overlay icon                                      | #fff        |\n| --cells-molecule-card-cover-icon-background-color           | Background color for overlay icon                           | #DA3851     |\n| --cells-molecule-card-cover-icon                            | Empty mixin for overlay icon                                | {}          |\n| --cells-molecule-card-cover-color                           | Color for overlay layer icon                                | #DA3851     |\n| --cells-molecule-card-cover-background-color                | Background color for overlay layer                          | rgba(255,255,255,.8) |\n| --cells-molecule-card-cover-text                            | Empty mixin for overlay text                                | {}          |\n| --cells-molecule-card-cover-icon-text-container             | Empty mixin for overlay layer                               | {}          |\n| --cells-molecule-card-cover-color-locked                    | Color for locked status overlay layer icon                  | #fff        |\n| --cells-molecule-card-cover-background-color-locked         | Background color for locked status overlay layer            | #f35e61     |\n| --cells-molecule-card-cover-icon-background-color-locked    | Background color for locked status overlay icon             | #DA3851     |\n| --cells-molecule-card-cover-icon-color-locked               | Color for locked status overlay icon                        | inherit     |\n| --cells-molecule-card-cover-icon-locked                     | Empty mixin for locked status overlay icon                  | {}          |\n| --cells-molecule-card-cover-locked                          | Empty mixin for locked status overlay layer                 | {}          |\n| --cells-molecule-card-cover-color-activate                  | Color for activate status overlay layer icon                | #fff        |\n| --cells-molecule-card-cover-background-color-activate       | Background color for activate status overlay layer          | #1464A5     |\n| --cells-molecule-card-cover-icon-background-color-activate  | Background color for activate status overlay icon           | #004481     |\n| --cells-molecule-card-cover-icon-color-activate             | Color for activate status overlay icon                      | inherit     |\n| --cells-molecule-card-cover-icon-activate                   | Empty mixin for activate status overlay icon                | {}          |\n| --cells-molecule-card-cover-activate                        | Empty mixin for activate status overlay layer               | {}          |\n| --cells-molecule-card-cover-color-off                       | Color for off status overlay layer icon                     | #121212     |\n| --cells-molecule-card-cover-background-color-off            | Background color for off status overlay layer               | rgba(255,255,255,.8) |\n| --cells-molecule-card-cover-icon-color-off                  | Color for off status overlay icon                           | #121212     |\n| --cells-molecule-card-cover-icon-off                        | Empty mixin for off status overlay icon                     | {}          |\n| --cells-molecule-card-cover-off                             | Empty mixin for off status overlay layer                    | {}          |",
+      "summary": "",
+      "path": "cells-molecule-card-cover/cells-molecule-card-cover.js",
+      "properties": [
+        {
+          "name": "imageSrc",
+          "type": "string | null | undefined",
+          "description": "URL of the card to display.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 164,
+              "column": 6
+            },
+            "end": {
+              "line": 167,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          },
+          "defaultValue": "\"\""
+        },
+        {
+          "name": "_statusValue",
+          "type": "Array | null | undefined",
+          "description": "Available status values",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 172,
+              "column": 6
+            },
+            "end": {
+              "line": 175,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Array"
+            }
+          },
+          "defaultValue": "[\"locked\",\"activate\",\"off\"]"
+        },
+        {
+          "name": "width",
+          "type": "number | null | undefined",
+          "description": "Image witdh, default is same as original. If a value is provided, do not change the 'height' attribute unless you want to change the aspect ratio.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 180,
+              "column": 6
+            },
+            "end": {
+              "line": 180,
+              "column": 19
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Number"
+            }
+          }
+        },
+        {
+          "name": "height",
+          "type": "number | null | undefined",
+          "description": "Image height, default is same as original. If a value is provided, do not change the 'width' attribute unless you want to change the aspect ratio.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 185,
+              "column": 6
+            },
+            "end": {
+              "line": 185,
+              "column": 20
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Number"
+            }
+          }
+        },
+        {
+          "name": "alt",
+          "type": "string | null | undefined",
+          "description": "Alternative text of the image.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 190,
+              "column": 6
+            },
+            "end": {
+              "line": 192,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "_isActive",
+          "type": "boolean | null | undefined",
+          "description": "Activation status of the card associated to the current card cover.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 197,
+              "column": 6
+            },
+            "end": {
+              "line": 200,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "readOnly": true,
+              "attributeType": "Boolean"
+            }
+          }
+        },
+        {
+          "name": "showOverlay",
+          "type": "boolean | null | undefined",
+          "description": "Set to true to display the card veil",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 205,
+              "column": 6
+            },
+            "end": {
+              "line": 208,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "icon",
+          "type": "string | null | undefined",
+          "description": "Icon to show on the overlay.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 213,
+              "column": 6
+            },
+            "end": {
+              "line": 215,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "iconSize",
+          "type": "number | null | undefined",
+          "description": "Size of the cover icon.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 220,
+              "column": 6
+            },
+            "end": {
+              "line": 223,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Number"
+            }
+          },
+          "defaultValue": "24"
+        },
+        {
+          "name": "defaultImage",
+          "type": "string | null | undefined",
+          "description": "Url of the default image of the card. Used if there is an error on loading the image from imageSrc.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 228,
+              "column": 6
+            },
+            "end": {
+              "line": 231,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          },
+          "defaultValue": "\"\""
+        },
+        {
+          "name": "_imageError",
+          "type": "boolean | null | undefined",
+          "description": "Read-only value that indicates that the last set src failed to load.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 236,
+              "column": 6
+            },
+            "end": {
+              "line": 239,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "observer": "\"_imageErrorChanged\"",
+              "attributeType": "Boolean"
+            }
+          }
+        },
+        {
+          "name": "fade",
+          "type": "boolean | null | undefined",
+          "description": "When preload is true, setting fade to true will cause the image to fade into place.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 244,
+              "column": 6
+            },
+            "end": {
+              "line": 247,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "preload",
+          "type": "boolean | null | undefined",
+          "description": "When true, any change to the src property will cause the placeholder image or the placeholder style to be shown until the new image has loaded.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 252,
+              "column": 6
+            },
+            "end": {
+              "line": 255,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "placeholder",
+          "type": "string | null | undefined",
+          "description": "Image to show as placeholder while the image loads if preload is true.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 260,
+              "column": 6
+            },
+            "end": {
+              "line": 262,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "text",
+          "type": "string | null | undefined",
+          "description": "Text to show over the card.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 267,
+              "column": 6
+            },
+            "end": {
+              "line": 269,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "status",
+          "type": "string | null | undefined",
+          "description": "Value that indicates the status of the card.\nDifferent status set different styles.\nPossible values:\n- locked\n- activate\n- off",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 279,
+              "column": 6
+            },
+            "end": {
+              "line": 283,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "observer": "\"_addStatus\"",
+              "attributeType": "String"
+            }
+          },
+          "defaultValue": "\"\""
+        },
+        {
+          "name": "imageLoaded",
+          "type": "Boolean",
+          "description": "Indicates if the image has been loaded",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 289,
+              "column": 6
+            },
+            "end": {
+              "line": 293,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "fluid",
+          "type": "boolean | null | undefined",
+          "description": "Set to true to make the image 100% width and height.\nThis requires setting a fluid width and height (% or vw) to the component to work.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 299,
+              "column": 6
+            },
+            "end": {
+              "line": 303,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "angledOverlay",
+          "type": "boolean | null | undefined",
+          "description": "Set to true to show the overlay in the corner",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 308,
+              "column": 6
+            },
+            "end": {
+              "line": 312,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        }
+      ],
+      "methods": [
+        {
+          "name": "_imageErrorChanged",
+          "description": "Uses the default image when there is an error on loading the original image.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 318,
+              "column": 2
+            },
+            "end": {
+              "line": 322,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "error"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_addStatus",
+          "description": "Add status classes to the overlay div.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 327,
+              "column": 2
+            },
+            "end": {
+              "line": 333,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "status"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_layer",
+          "description": "Sets _isActive property value (which determines overlay visibility) based on showOverlay and status properties",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 338,
+              "column": 2
+            },
+            "end": {
+              "line": 341,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "status"
+            },
+            {
+              "name": "showOverlay"
+            }
+          ]
+        },
+        {
+          "name": "_deleteStatus",
+          "description": "Delete all possible status classes.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 346,
+              "column": 2
+            },
+            "end": {
+              "line": 356,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "container"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        }
+      ],
+      "staticMethods": [],
+      "demos": [
+        {
+          "url": "demo/index.html",
+          "description": ""
+        }
+      ],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 155,
+          "column": 0
+        },
+        "end": {
+          "line": 357,
+          "column": 1
+        }
+      },
+      "privacy": "public",
+      "superclass": "Polymer.Element",
+      "name": "CellsMoleculeCardCover",
+      "attributes": [
+        {
+          "name": "image-src",
+          "description": "URL of the card to display.",
+          "sourceRange": {
+            "start": {
+              "line": 164,
+              "column": 6
+            },
+            "end": {
+              "line": 167,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "width",
+          "description": "Image witdh, default is same as original. If a value is provided, do not change the 'height' attribute unless you want to change the aspect ratio.",
+          "sourceRange": {
+            "start": {
+              "line": 180,
+              "column": 6
+            },
+            "end": {
+              "line": 180,
+              "column": 19
+            }
+          },
+          "metadata": {},
+          "type": "number | null | undefined"
+        },
+        {
+          "name": "height",
+          "description": "Image height, default is same as original. If a value is provided, do not change the 'width' attribute unless you want to change the aspect ratio.",
+          "sourceRange": {
+            "start": {
+              "line": 185,
+              "column": 6
+            },
+            "end": {
+              "line": 185,
+              "column": 20
+            }
+          },
+          "metadata": {},
+          "type": "number | null | undefined"
+        },
+        {
+          "name": "alt",
+          "description": "Alternative text of the image.",
+          "sourceRange": {
+            "start": {
+              "line": 190,
+              "column": 6
+            },
+            "end": {
+              "line": 192,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "show-overlay",
+          "description": "Set to true to display the card veil",
+          "sourceRange": {
+            "start": {
+              "line": 205,
+              "column": 6
+            },
+            "end": {
+              "line": 208,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "icon",
+          "description": "Icon to show on the overlay.",
+          "sourceRange": {
+            "start": {
+              "line": 213,
+              "column": 6
+            },
+            "end": {
+              "line": 215,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "icon-size",
+          "description": "Size of the cover icon.",
+          "sourceRange": {
+            "start": {
+              "line": 220,
+              "column": 6
+            },
+            "end": {
+              "line": 223,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "number | null | undefined"
+        },
+        {
+          "name": "default-image",
+          "description": "Url of the default image of the card. Used if there is an error on loading the image from imageSrc.",
+          "sourceRange": {
+            "start": {
+              "line": 228,
+              "column": 6
+            },
+            "end": {
+              "line": 231,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "fade",
+          "description": "When preload is true, setting fade to true will cause the image to fade into place.",
+          "sourceRange": {
+            "start": {
+              "line": 244,
+              "column": 6
+            },
+            "end": {
+              "line": 247,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "preload",
+          "description": "When true, any change to the src property will cause the placeholder image or the placeholder style to be shown until the new image has loaded.",
+          "sourceRange": {
+            "start": {
+              "line": 252,
+              "column": 6
+            },
+            "end": {
+              "line": 255,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "placeholder",
+          "description": "Image to show as placeholder while the image loads if preload is true.",
+          "sourceRange": {
+            "start": {
+              "line": 260,
+              "column": 6
+            },
+            "end": {
+              "line": 262,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "text",
+          "description": "Text to show over the card.",
+          "sourceRange": {
+            "start": {
+              "line": 267,
+              "column": 6
+            },
+            "end": {
+              "line": 269,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "status",
+          "description": "Value that indicates the status of the card.\nDifferent status set different styles.\nPossible values:\n- locked\n- activate\n- off",
+          "sourceRange": {
+            "start": {
+              "line": 279,
+              "column": 6
+            },
+            "end": {
+              "line": 283,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "image-loaded",
+          "description": "Indicates if the image has been loaded",
+          "sourceRange": {
+            "start": {
+              "line": 289,
+              "column": 6
+            },
+            "end": {
+              "line": 293,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "Boolean"
+        },
+        {
+          "name": "fluid",
+          "description": "Set to true to make the image 100% width and height.\nThis requires setting a fluid width and height (% or vw) to the component to work.",
+          "sourceRange": {
+            "start": {
+              "line": 299,
+              "column": 6
+            },
+            "end": {
+              "line": 303,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "angled-overlay",
+          "description": "Set to true to show the overlay in the corner",
+          "sourceRange": {
+            "start": {
+              "line": 308,
+              "column": 6
+            },
+            "end": {
+              "line": 312,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        }
+      ],
+      "events": [
+        {
+          "type": "CustomEvent",
+          "name": "image-loaded-changed",
+          "description": "Fired when the `imageLoaded` property changes.",
+          "metadata": {}
+        }
+      ],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "cells-molecule-card-cover"
+    }
+  ]
+}

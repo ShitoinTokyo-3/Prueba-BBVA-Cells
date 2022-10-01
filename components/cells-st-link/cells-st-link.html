@@ -1,0 +1,52 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="cells-st-link-styles.html">
+<!--
+`cells-st-link` is a styling wrapper for native link/anchor elements. It should receive an `a` tag as slotted element.
+
+You can use the normal link attributes in the `a` tag, as `href`, `target`...
+
+```html
+<cells-st-link>
+  <a href="#">My link</a>
+</cells-st-link>
+```
+
+## Styling
+
+The following custom properties and mixins are available for styling:
+
+### Available classes
+- `title` -- Shows cells-st-link as a title
+
+
+### Custom Properties
+| Custom Property                     | Selector                       | CSS Property          | Value               |
+| ----------------------------------- | ------------------------------ | --------------------- | ------------------- |
+| --cells-fontDefault                 | :host ::slotted(*)             | font-family           | sans-serif          |
+| --cells-st-link-font-weight         | :host ::slotted(*)             | font-weight           | 700                 |
+| --cells-st-link-color               | :host ::slotted(*)             | color                 | --bbva-medium-blue  |
+| --cells-st-link-font-size           | :host ::slotted(*)             | font-size             | `No fallback value` |
+| --cells-st-link-color-hover         | :host ::slotted(:hover)        | --cells-st-link-color | --bbva-core-blue    |
+| --cells-st-link-color-active        | :host ::slotted(:active)       | --cells-st-link-color | --bbva-core-blue    |
+| --cells-st-link-color-focus         | :host ::slotted(:active)       | --cells-st-link-color | --bbva-core-blue    |
+| --cells-st-link-color-disabled      | :host([disabled]) ::slotted(*) | --cells-st-link-color | --bbva-400          |
+### @apply
+| Mixins                     | Selector                       | Value |
+| -------------------------- | ------------------------------ | ----- |
+| --cells-st-link-host       | :host                          | {}    |
+| --cells-st-link            | :host ::slotted(*)             | {}    |
+| --cells-st-link-hover      | :host ::slotted(:hover)        | {}    |
+| --cells-st-link-focus      | :host ::slotted(:focus)        | {}    |
+| --cells-st-link-active     | :host ::slotted(:active)       | {}    |
+| --cells-st-link-disabled   | :host([disabled]) ::slotted(*) | {}    |
+
+@demo demo/index.html
+@hero cells-st-link.png
+-->
+<dom-module id="cells-st-link">
+  <template>
+    <style include="cells-st-link-styles cells-st-link-shared-styles"></style>
+    <slot></slot>
+  </template>
+  <script src="cells-st-link.js"></script>
+</dom-module>

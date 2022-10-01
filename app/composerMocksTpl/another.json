@@ -1,0 +1,65 @@
+{
+  "template": {
+    "tag": "cells-template-paper-drawer-panel",
+    "properties": {
+      "disableEdgeSwipe": true,
+      "headerFixed": true
+    }
+  },
+  "components": [
+    {
+      "zone": "app__header",
+      "type": "UI",
+      "familyPath": "../../components/cells-component-app-header",
+      "tag": "cells-component-app-header",
+      "properties": {
+        "text": "Pokedex detail"
+      }
+    },
+    {
+      "zone": "app__main",
+      "type": "DM",
+      "familyPath": "../elements/pokemon-detail-dm",
+      "tag": "pokemon-detail-dm",
+      "properties": {
+        "cellsConnections": {
+          "in": {},
+          "out": {
+            "data-success-detail-dm":{
+              "bind":"data-success-pokemon"
+            }
+          },
+          "params": {
+            "idPokemon": "idPokemon"
+          }
+        }
+      }
+    },
+    {
+      "zone": "app__main",
+      "type": "UI",
+      "familyPath": "../elements/pokemon-detail",
+      "tag": "pokemon-detail",
+      "properties": {
+        "cellsConnections": {
+          "in": {
+            "data-success-detail-dm":{
+              "bind":"data"
+            }
+          },
+          "out": {
+            "navigate-to-evolutions":{
+              "bind":"navigate-to-evolutions",
+              "link":{
+                "page":"routerExample",
+                "params": {
+                  "id": "id"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

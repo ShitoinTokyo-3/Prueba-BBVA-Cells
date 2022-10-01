@@ -1,0 +1,96 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>cells-ajax Demo</title>
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+  <link rel="import" href="../cells-ajax.html">
+  <link rel="import" href="../../cells-demo-helper/cells-demo-helper.html">
+  <link rel="import" href="../../cells-demo-dm-helper/cells-demo-dm-helper.html">
+  <link rel="import" href="../../paper-radio-button/paper-radio-button.html">
+  <link rel="import" href="../../paper-radio-group/paper-radio-group.html">
+</head>
+
+<body unresolved>
+  <cells-demo-helper
+    resolution="desktop"
+    events='["request", "response", "error"]'
+    multi-toast>
+    <cells-demo-case heading="Default">
+      <template>
+        <dom-bind>
+          <template is="dom-bind" id="demo">
+            <cells-demo-dm-helper
+              id="helper"
+              without-login
+              class="full-width"
+              loading-data="[[loadingData]]"
+              json-data="[[response]]"
+              on-get-request="getRequest"
+              on-get-clear-cache="getClearCache"
+              on-get-empty-list="getEmptyList"
+              dm-methods="[[dmMethods]]">
+              <div slot="top-bar">
+                <paper-radio-group id="radioGroup" selected="{{cacheType}}">
+                  <paper-radio-button name="local">Local</paper-radio-button>
+                  <paper-radio-button name="memory">Memory</paper-radio-button>
+                </paper-radio-group>
+              </div>
+            </cells-demo-dm-helper>
+            <cells-ajax
+              id="dm"
+              auto
+              cache="[[cacheType]]"
+              last-response="{{response}}">
+            </cells-ajax>
+            <script>
+              document.addEventListener('WebComponentsReady', () => {
+                const demo = document.querySelector('dom-bind');
+                demo.$.radioGroup.selected = 'local';
+                demo.dmMethods = [{
+                  'event': 'get-request',
+                  'label': 'Generate Request',
+                  'method': 'generateRequest()'
+                },
+                {
+                  'event': 'get-clear-cache',
+                  'label': 'Clear Cache',
+                  'method': 'clearCache()'
+                },
+                {
+                  'event': 'get-empty-list',
+                  'label': 'Empty List',
+                  'method': 'It´s not a self method'
+                }];
+                demo.$.dm.cacheType = 'local';
+                demo.getRequest = () => {
+                  demo.$.dm.url = 'https://randomapi.com/api/6de6abfedb24f889e0b5f675edc50deb?fmt=raw&sole';
+                  demo.$.dm.generateRequest();
+                };
+                demo.getClearCache = () => {
+                  demo.$.dm.clearCache(demo.cacheType);
+                };
+                demo.getEmptyList = () => {
+                  demo.$.helper.jsonData = [];
+                };
+              });
+            </script>
+          </template>
+        </dom-bind>
+      </template>
+    </cells-demo-case>
+  </cells-demo-helper>
+</body>
+
+</html>

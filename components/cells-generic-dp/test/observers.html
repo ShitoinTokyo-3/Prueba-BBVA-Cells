@@ -1,0 +1,246 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+
+  <link rel="import" href="../cells-generic-dp.html" />
+
+</head>
+
+<body>
+
+  <test-fixture id="myEl">
+    <template>
+      <cells-generic-dp></cells-generic-dp>
+    </template>
+  </test-fixture>
+
+  <script>
+    /* global suite, setup, fixture, teardown, test, sinon */
+    /* eslint no-unused-expressions: 0*/
+    suite('<cells-generic-dp/> tag', function() {
+      var myEl;
+
+      setup(function() {
+        myEl = fixture('myEl');
+      });
+
+      teardown(function() {
+        myEl.remove();
+      });
+
+      suite('_setURL', function() {
+        test('should emit an error without arguments', function(done) {
+          var spy = sinon.spy(myEl, '_emit');
+          myEl.addEventListener('cells-generic-dp-error', function _l(e) {
+            myEl.removeEventListener(e.type, _l);
+            expect(spy).to.have.been.called;
+            spy.restore();
+            done();
+          });
+          myEl._setURL();
+        });
+        test('should set value of "_url" just to [host] argument', function() {
+          var fakeHost = 'fake_host';
+          myEl._setURL(fakeHost, '');
+          expect(myEl._url).to.be.equal(fakeHost);
+        });
+        test('should set value of "_url" to [host/path] arguments', function() {
+          var fakeHost = 'fake_host';
+          var fakePath = 'fake_path';
+          myEl._setURL(fakeHost, fakePath);
+          expect(myEl._url).to.be.equal([ fakeHost, fakePath ].join('/'));
+        });
+      });
+
+      suite('_isValidCacheType', function() {
+        test('is fired after changing  [cache] property', function() {
+          var spy = sinon.spy(myEl, '_isValidCacheType');
+          myEl.set('cache', 'other');
+          expect(spy).to.have.been.called;
+          spy.restore();
+        });
+        test('fires error if [cache] is not valid', function(done) {
+          myEl.addEventListener('cells-generic-dp-error', function _l(e) {
+            done();
+          });
+          myEl.set('cache', 'other');
+        });
+        test('fires error if [cache] is not an string', function(done) {
+          myEl.addEventListener('cells-generic-dp-error', function _l(e) {
+            done();
+          });
+          myEl._isValidCacheType(null);
+        });
+        [ 'none', 'local', 'memory' ].forEach(function(type) {
+          test('works for [cache] = "' + type + '"', function() {
+            var spy = sinon.spy(myEl, '_emit');
+            myEl.set('cache', type);
+            expect(spy).not.to.have.been.called;
+            spy.restore();
+          });
+        });
+      });
+
+      suite('_lastErrorChanged', function() {
+        setup(function() {
+         this.xhr = sinon.useFakeXMLHttpRequest();
+          var requests = this.requests = [];
+
+          this.xhr.onCreate = function (xhr) {
+            requests.push(xhr);
+          };
+        });
+
+        teardown(function() {
+          this.xhr.restore();
+        });
+
+        test('is fired on internal cells-ajax firing "error" event', function() {
+
+          var spy = sinon.spy(myEl, '_lastErrorChanged');
+          myEl.$[ 'cells-ajax' ].fire('error');
+          expect(spy).to.have.been.called;
+          spy.restore();
+        });
+        test('emits event "request-error"', function(done) {
+          myEl.addEventListener('request-error', function _l(e) {
+            myEl.removeEventListener(e.type, _l);
+            done();
+          });
+          myEl._lastErrorChanged();
+        });
+        test('extracts request headers from event', function() {
+          var ajax = document.createElement('iron-ajax');
+          ajax.set('xhr', new XMLHttpRequest());
+          var fakeEvent = new CustomEvent('error', { detail: ajax });
+          var spy = sinon.spy(myEl, '_extractHeadersFromResponse');
+          myEl._lastErrorChanged(fakeEvent);
+          expect(spy).to.have.been.called;
+          spy.restore();
+        });
+
+        test('headers are returned even if body does not exist', function(){
+          var ajax = document.createElement('iron-ajax');
+          ajax.set('xhr', new XMLHttpRequest());
+          ajax.xhr.open('GET', 'http://my.mock');
+          ajax.xhr.send();
+          this.requests[0].setResponseHeaders({ "myheader": "mock" });
+          var fakeEvent = new CustomEvent('error', { detail: ajax });
+          myEl._lastErrorChanged(fakeEvent);
+          expect(myEl._lastError.headers.myheader).to.equal('mock');
+        })
+
+        test('extracts last request from event', function() {
+          var ajax = document.createElement('iron-ajax');
+          ajax.xhr = new XMLHttpRequest();
+          var fakeEvent = new CustomEvent('error', { detail: ajax });
+          var spy = sinon.spy(myEl, '_extractResponse');
+          myEl._lastErrorChanged(fakeEvent);
+          expect(spy).to.have.been.called;
+          spy.restore();
+        });
+
+        test('extracts error status from event', () => {
+          var xhr = new XMLHttpRequest();
+          xhr.status = 500;
+          var eventDetail = {
+            request: {
+              xhr: xhr
+            }
+          };
+          var fakeEvent = new CustomEvent('error', { detail: eventDetail });
+          var emptyEvent = new CustomEvent('error', { detail: {}});
+          assert.deepEqual(myEl._extractStatusErrorCode(fakeEvent), {status: 500});
+          assert.deepEqual(myEl._extractStatusErrorCode(emptyEvent), {})
+        })
+      });
+
+      suite('_lastResponseChanged', function() {
+
+        setup(function() {
+         this.xhr = sinon.useFakeXMLHttpRequest();
+          var requests = this.requests = [];
+
+          this.xhr.onCreate = function (xhr) {
+            requests.push(xhr);
+          };
+        });
+
+        teardown(function() {
+          this.xhr.restore();
+        });
+
+        test('is fired on internal cells-ajax firing "response" event', function() {
+          var spy = sinon.spy(myEl, '_lastResponseChanged');
+          myEl.$[ 'cells-ajax' ].fire('response');
+          expect(spy).to.have.been.called;
+          spy.restore();
+        });
+        test('emits event "request-success"', function(done) {
+          myEl.addEventListener('request-success', function _l(e) {
+            myEl.removeEventListener(e.type, _l);
+            done();
+          });
+          myEl._lastResponseChanged();
+        });
+        test('extracts last request from event', function() {
+          var ajax = document.createElement('iron-ajax');
+          ajax.xhr = new XMLHttpRequest();
+          var fakeEvent = new CustomEvent('error', { detail: ajax });
+          var spy = sinon.spy(myEl, '_extractResponse');
+          myEl._lastResponseChanged(fakeEvent);
+          expect(spy).to.have.been.called;
+          spy.restore();
+        });
+        test('extracts request headers from event', function() {
+          var ajax = document.createElement('iron-ajax');
+          ajax.set('xhr', new XMLHttpRequest());
+          var fakeEvent = new CustomEvent('error', { detail: ajax });
+          var spy = sinon.spy(myEl, '_extractHeadersFromResponse');
+          myEl._lastResponseChanged(fakeEvent);
+          expect(spy).to.have.been.called;
+          spy.restore();
+        });
+        test('headers are returned even if body does not exist', function(){
+          var ajax = document.createElement('iron-ajax');
+
+          ajax.set('xhr', new XMLHttpRequest());
+          ajax.xhr.open('GET', 'http://my.mock');
+          ajax.xhr.send();
+          this.requests[0].setResponseHeaders({ "myheader": "mock" });
+          var fakeEvent = new CustomEvent('error', { detail: ajax });
+          myEl._lastResponseChanged(fakeEvent);
+          expect(myEl._lastResponse.headers.myheader).to.equal('mock');
+        })
+        test('with [verbose], does call console', function() {
+          var ajax = document.createElement('iron-ajax');
+          ajax.set('xhr', new XMLHttpRequest());
+          var fakeEvent = new CustomEvent('error', { detail: ajax });
+          var spy = sinon.spy(console, 'log');
+          myEl.set('verbose', true);
+          myEl._lastResponseChanged(fakeEvent);
+          expect(spy).to.have.been.called;
+          spy.restore();
+        });
+        test('with [verbose] on false, does not call console', function() {
+          var ajax = document.createElement('iron-ajax');
+          ajax.set('xhr', new XMLHttpRequest());
+          var fakeEvent = new CustomEvent('error', { detail: ajax });
+          var spy = sinon.spy(console, 'log');
+          myEl.set('verbose', false);
+          myEl._lastResponseChanged(fakeEvent);
+          expect(spy).to.have.not.been.called;
+          spy.restore();
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

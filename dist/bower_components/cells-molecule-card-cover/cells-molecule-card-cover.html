@@ -1,0 +1,30 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="cells-molecule-card-cover-styles.html">
+<link rel="import" href="../cells-atom-icon/cells-atom-icon.html">
+<link rel="import" href="../iron-image/iron-image.html">
+
+<dom-module id="cells-molecule-card-cover">
+  <template>
+    <style include="cells-molecule-card-cover-styles cells-molecule-card-cover-shared-styles"></style>
+
+    <iron-image id="image"
+      src="[[imageSrc]]"
+      height$="[[height]]"
+      width$="[[width]]"
+      alt$="[[alt]]"
+      error="{{_imageError}}"
+      fade="[[fade]]"
+      preload="[[preload]]"
+      placeholder="[[placeholder]]"
+      loaded="{{imageLoaded}}"
+      data-selector="cells-molecule-card-cover-img">
+    </iron-image>
+
+    <div class="icon-text-container" hidden$="[[_isActive]]" id="iconTextContainer">
+      <cells-atom-icon class$="icon-size-[[iconSize]]" icon="[[icon]]"></cells-atom-icon>
+      <span>{{text}}</span>
+    </div>
+
+  </template>
+  <script src="cells-molecule-card-cover.js"></script>
+</dom-module>
